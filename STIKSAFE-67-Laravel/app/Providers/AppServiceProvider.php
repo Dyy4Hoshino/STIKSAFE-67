@@ -12,6 +12,10 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         //
+        $this->app->bind(
+            \App\Contracts\ScanEngineClient::class,
+            \App\Services\ScanEngine\FakeScanEngineClient::class // Ganti ke HttpScanEngineClient nanti saat Yasa siap
+    );
     }
 
     /**
