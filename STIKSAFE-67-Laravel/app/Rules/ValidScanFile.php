@@ -8,14 +8,6 @@ use Illuminate\Http\UploadedFile;
 
 class ValidScanFile implements ValidationRule
 {
-    private const ALLOWED_TYPES = [
-        'pdf' => ['application/pdf'],
-        'txt' => ['text/plain'],
-        'png' => ['image/png'],
-        'jpg' => ['image/jpeg'],
-        'jpeg' => ['image/jpeg'],
-    ];
-
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         if (! $value instanceof UploadedFile || ! $value->isValid()) {
@@ -23,16 +15,14 @@ class ValidScanFile implements ValidationRule
             return;
         }
 
-        $extension = strtolower($value->getClientOriginalExtension());
-        $mime = $value->getMimeType();
-
-        if (! isset(self::ALLOWED_TYPES[$extension])) {
-            $fail('Tipe file tidak diizinkan.');
+        // Cek ukuran file tidak kosong
+        if ($value->getSize() <= 0) {
+            $fail('File kosong tidak dapat dipindai.');
             return;
         }
 
-        if (! in_array($mime, self::ALLOWED_TYPES[$extension], true)) {
-            $fail('Isi file tidak cocok dengan ekstensi.');
-        }
+        // Semua tipe file diizinkan masuk ke sistem pemindaian
+        // Termasuk file yang ekstensinya tidak sesuai dengan isinya (penyamaran file/disguised file),
+        // karena sistem Machine Learning yang akan menganalisis isi biner aslinya.
     }
 }
