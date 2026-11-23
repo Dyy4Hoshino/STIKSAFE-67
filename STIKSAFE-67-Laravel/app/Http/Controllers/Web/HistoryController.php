@@ -4,11 +4,34 @@ namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Models\Scan;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class HistoryController extends Controller
 {
+    public function destroy(Request $request, string $id): RedirectResponse
+    {
+        $scan = Scan::query()
+            ->where('user_id', $request->user()->getKey())
+            ->whereNull('user_deleted_at')
+            ->whereKey($id)
+            ->firstOrFail();
+
+        if ($scan->stored_path && $scan->file_purged_at === null && ! Storage::disk($scan->storage_disk)->delete($scan->stored_path)) {
+            return back()->withErrors(['delete' => 'File asli belum dapat dihapus. Riwayat tetap dipertahankan; coba lagi.']);
+        }
+
+        $scan->forceFill([
+            'stored_path' => null,
+            'file_purged_at' => now(),
+            'user_deleted_at' => now(),
+        ])->save();
+
+        return redirect()->route('history')->with('success', 'Riwayat scan dihapus. File asli dipurge segera.');
+    }
+
     public function index(Request $request): View
     {
         $user = $request->user();

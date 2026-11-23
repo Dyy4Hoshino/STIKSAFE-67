@@ -14,16 +14,20 @@ class ConfirmController extends Controller
 {
     public function show(Request $request): View
     {
-        abort_unless($request->query('action') === 'cancel-scan', 404);
+        $action = $request->query('action');
+        abort_unless(in_array($action, ['cancel-scan', 'delete-scan'], true), 404);
 
         $scan = Scan::query()
             ->where('user_id', $request->user()->getKey())
+            ->whereNull('user_deleted_at')
             ->whereKey($request->query('target'))
             ->firstOrFail();
 
-        abort_if($scan->isTerminal(), 409);
+        if ($action === 'cancel-scan') {
+            abort_if($scan->isTerminal(), 409);
+        }
 
-        return view('confirm', compact('scan'));
+        return view('confirm', compact('action', 'scan'));
     }
 
     public function cancelScan(Request $request, string $id, ScanStateMachine $stateMachine): RedirectResponse
