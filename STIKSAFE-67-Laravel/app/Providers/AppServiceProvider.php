@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Contracts\ScanEngineClient;
+use App\Services\ScanEngine\FakeScanEngineClient;
+use App\Services\ScanEngine\HttpScanEngineClient;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -11,11 +14,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
         $this->app->bind(
-            \App\Contracts\ScanEngineClient::class,
-            \App\Services\ScanEngine\FakeScanEngineClient::class // Ganti ke HttpScanEngineClient nanti saat Yasa siap
-    );
+            ScanEngineClient::class,
+            config('services.ml.driver') === 'http'
+                ? HttpScanEngineClient::class
+                : FakeScanEngineClient::class,
+        );
     }
 
     /**

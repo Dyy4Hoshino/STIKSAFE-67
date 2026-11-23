@@ -1,9 +1,125 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 @import 'tailwindcss';
 
-@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
-@source '../../storage/framework/views/*.php';
-
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-sans: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --color-deep-slate: #0B1120;
+    --color-steel-blue: #4682B4;
+    --color-safety-orange: #FF6700;
+    --color-emerald-safe: #10B981;
+    --color-crimson-danger: #EF4444;
+}
+
+:root {
+    --bg-deep-slate: #0B1120;
+    --accent-steel-blue: #4682B4;
+    --accent-safety-orange: #FF6700;
+    --status-emerald: #10B981;
+    --status-crimson: #EF4444;
+    --glass-bg: rgba(15, 23, 42, 0.78);
+    --glass-border: rgba(70, 130, 180, 0.25);
+    --glass-border-hover: rgba(255, 103, 0, 0.4);
+}
+
+body {
+    background-color: var(--bg-deep-slate);
+    color: #F8FAFC;
+    font-family: var(--font-sans);
+    overflow-x: hidden;
+}
+
+/* Glassmorphism utility classes */
+.glass-panel {
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+.glass-panel-interactive {
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-panel-interactive:hover {
+    border-color: var(--glass-border-hover);
+    box-shadow: 0 0 20px rgba(255, 103, 0, 0.2);
+    transform: translateY(-2px);
+}
+
+/* Scanner beam animation */
+@keyframes scanBeam {
+    0% {
+        top: 0%;
+        opacity: 0.8;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        top: 100%;
+        opacity: 0.8;
+    }
+}
+
+.scanner-beam {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, transparent, #FF6700, #4682B4, #FF6700, transparent);
+    box-shadow: 0 0 15px #FF6700, 0 0 25px #4682B4;
+    animation: scanBeam 2.2s ease-in-out infinite alternate;
+}
+
+/* Glowing text and borders */
+.text-steel-blue {
+    color: #4682B4;
+}
+
+.text-safety-orange {
+    color: #FF6700;
+}
+
+.glow-orange {
+    text-shadow: 0 0 12px rgba(255, 103, 0, 0.6);
+}
+
+.glow-blue {
+    text-shadow: 0 0 12px rgba(70, 130, 180, 0.6);
+}
+
+/* ThreeJS Canvas styling */
+#three-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #0B1120;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(70, 130, 180, 0.4);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 103, 0, 0.6);
 }

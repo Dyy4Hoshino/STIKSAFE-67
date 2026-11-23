@@ -1,64 +1,13 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detail Scan | STIKSAFE-67</title>
-    @if (in_array($scan->status?->value, ['queued', 'processing'], true) && isset($scan->poll_after_ms) && $scan->poll_after_ms >= 5000)
-        <meta http-equiv="refresh" content="{{ (int) ($scan->poll_after_ms / 1000) }}">
-    @endif
-</head>
-<body>
-    <a href="#main-content">Lewati ke konten utama</a>
-    <header>
-        <p>STIKSAFE-67</p>
-        <nav aria-label="Navigasi utama">
-            <ul>
-                <li><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                <li><a href="{{ route('scan.create') }}">Scan File</a></li>
-                <li><a href="{{ route('scans.show', $scan->id) }}" aria-current="page">Detail Scan</a></li>
-                <li><form method="post" action="{{ route('logout') }}">@csrf<button type="submit">Keluar</button></form></li>
-            </ul>
-        </nav>
-    </header>
-    <main id="main-content">
-        @if (session('success'))<p role="status">{{ session('success') }}</p>@endif
-        <h1>Detail Scan</h1>
-        <dl>
-            <dt>ID Scan</dt><dd>{{ $scan->id }}</dd>
-            <dt>Nama file</dt><dd>{{ $scan->original_filename }}</dd>
-            <dt>Ukuran</dt><dd>{{ number_format($scan->file_size / 1024, 2, ',', '.') }} KB</dd>
-            <dt>Jenis file</dt><dd>{{ $scan->mime_type }}</dd>
-            <dt>Status</dt><dd>{{ $scan->status?->value === 'queued' ? 'Menunggu antrean' : ($scan->status?->value === 'processing' ? 'Sedang dianalisis' : ucfirst($scan->status?->value ?? 'Tidak diketahui')) }}</dd>
-            @if ($scan->created_at)<dt>Waktu upload</dt><dd><time datetime="{{ $scan->created_at->toISOString() }}">{{ $scan->created_at->timezone(config('app.timezone'))->format('d M Y H:i:s T') }}</time></dd>@endif
-        </dl>
-
-        @if (in_array($scan->status?->value, ['queued', 'processing'], true))
-            <section aria-labelledby="running-title">
-                <h2 id="running-title">Pemindaian Sedang Berlangsung</h2>
-                <p>Jangan mengirim file yang sama berulang. Hasil akan tersedia di Riwayat.</p>
-                <p><a href="{{ route('scans.show', $scan->id) }}">Segarkan status</a></p>
-                <p><a href="{{ route('scans.cancel', $scan->id) }}">Batalkan scan</a></p>
-            </section>
-        @elseif ($scan->status?->value === 'completed')
-            <section aria-labelledby="result-title">
-                <h2 id="result-title">Hasil Pemindaian</h2>
-                <p>Hasil: {{ match ($scan->result_label?->value) { 'safe' => 'Safe — tidak ditemukan indikator berbahaya berdasarkan analisis sistem', 'suspicious' => 'Suspicious — perlu pemeriksaan lebih lanjut', 'malicious' => 'Malicious — diklasifikasikan berbahaya', 'unknown' => 'Unknown — sistem tidak dapat menentukan klasifikasi', default => '—' } }}</p>
-                @if ($scan->confidence !== null)<p>Skor model: {{ $scan->confidence }}</p><p>Skor model berada pada skala 0–1 dan bukan persentase peluang.</p>@endif
-                @if ($scan->model_version)<p>Versi model: {{ $scan->model_version }}</p>@endif
-                <p>Hasil ini adalah prediksi model dan bukan jaminan keamanan mutlak. Tetap berhati-hati terhadap file yang tidak Anda kenal.</p>
-                <p>File asli: {{ $scan->file_purged_at ? 'sudah dihapus sesuai kebijakan retensi' : 'tersedia' }}</p>
-            </section>
-        @else
-            <section aria-labelledby="incomplete-title">
-                <h2 id="incomplete-title">Pemindaian Tidak Selesai</h2>
-                <p>Status: {{ ucfirst($scan->status?->value ?? 'Tidak diketahui') }}</p>
-                <p>Pemindaian gagal atau tidak dapat diselesaikan. Silakan coba lagi.</p>
-                <p><a href="{{ route('scan.create') }}">Pindai file lain</a></p>
-            </section>
-        @endif
-        <p><a href="{{ route('dashboard') }}">Kembali ke Dashboard</a></p>
-    </main>
-    <footer><p>STIKSAFE-67 — angkatan 2026–2027</p></footer>
-</body>
-</html>
+@extends('layouts.app')
+@section('title', 'Detail Scan | STIKSAFE-67')
+@section('head')
+@if(in_array($scan->status?->value,['queued','processing'],true) && isset($scan->poll_after_ms) && $scan->poll_after_ms>=5000)<meta http-equiv="refresh" content="{{ (int) ($scan->poll_after_ms / 1000) }}">@endif
+@endsection
+@section('content')
+<div class="eyebrow">SCAN REPORT / {{ $scan->id }}</div><h1>Hasil pemeriksaan</h1><p class="muted">Rincian status dan informasi file yang dianalisis.</p>
+<div class="grid" style="grid-template-columns:1.2fr .8fr;align-items:start;margin-top:24px"><section class="panel"><h2 style="margin-top:0;overflow-wrap:anywhere">{{ $scan->original_filename }}</h2><dl class="muted" style="display:grid;grid-template-columns:150px 1fr;gap:12px;font-size:13px"><dt>ID scan</dt><dd style="margin:0;overflow-wrap:anywhere">{{ $scan->id }}</dd><dt>Ukuran</dt><dd style="margin:0">{{ number_format($scan->file_size / 1024, 2, ',', '.') }} KB</dd><dt>Jenis file</dt><dd style="margin:0">{{ $scan->mime_type }}</dd><dt>Status</dt><dd style="margin:0">{{ $scan->status?->value === 'queued' ? 'Menunggu antrean' : ($scan->status?->value === 'processing' ? 'Sedang dianalisis' : ucfirst($scan->status?->value ?? 'Tidak diketahui')) }}</dd>@if($scan->created_at)<dt>Waktu upload</dt><dd style="margin:0"><time datetime="{{ $scan->created_at->toISOString() }}">{{ $scan->created_at->timezone(config('app.timezone'))->format('d M Y H:i:s T') }}</time></dd>@endif</dl></section>
+@if(in_array($scan->status?->value,['queued','processing'],true))<section class="panel"><span class="eyebrow">ANALYSIS RUNNING</span><h2>Pemindaian berlangsung</h2><p class="muted">Status diperbarui otomatis. Hindari mengirim file yang sama berulang.</p><div style="height:4px;background:#1e293b;border-radius:9px;overflow:hidden"><div style="height:100%;width:45%;background:#FF6700;animation:pulse 1.4s ease-in-out infinite alternate"></div></div><p><a style="color:#FF8A38" href="{{ route('scans.show',$scan->id) }}">Segarkan status</a></p><p><a style="color:#fb7185" href="{{ route('scans.cancel',$scan->id) }}">Batalkan scan</a></p></section>
+@elseif($scan->status?->value==='completed')<section class="panel"><span class="eyebrow">ANALYSIS COMPLETE</span><h2>Hasil pemindaian</h2><p style="font-size:20px;color:{{ match($scan->result_label?->value){'safe'=>'#10B981','malicious'=>'#EF4444',default=>'#FF8A38'} }}">{{ match ($scan->result_label?->value) { 'safe' => 'Aman', 'suspicious' => 'Mencurigakan', 'malicious' => 'Berbahaya', 'unknown' => 'Tidak diketahui', default => '—' } }}</p>@if($scan->confidence!==null)<p class="muted">Skor model: {{ $scan->confidence }} / skala 0–1</p>@endif@if($scan->model_version)<p class="muted">Versi model: {{ $scan->model_version }}</p>@endif<p class="muted" style="font-size:12px">Prediksi model bukan jaminan keamanan mutlak. File asli: {{ $scan->file_purged_at ? 'sudah dihapus sesuai retensi' : 'tersedia' }}.</p></section>
+@else<section class="panel"><span class="eyebrow">ANALYSIS INCOMPLETE</span><h2>Pemindaian tidak selesai</h2><p class="muted">Status: {{ ucfirst($scan->status?->value ?? 'Tidak diketahui') }}. Coba lagi dengan file lain.</p><a class="btn primary" href="{{ route('scan.create') }}">Pindai file lain</a></section>@endif</div>
+<div class="actions"><a class="btn" href="{{ route('dashboard') }}">← Dashboard</a><a class="btn" href="{{ route('history') }}">Riwayat scan</a></div><style>@keyframes pulse{from{transform:translateX(-100%)}to{transform:translateX(160%)}}@media(max-width:700px){.grid[style*="1.2fr"]{grid-template-columns:1fr!important}}</style>
+@endsection

@@ -1,17 +1,1 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Halaman Tidak Ditemukan (404) | STIKSAFE-67</title>
-</head>
-<body>
-    <header><p>STIKSAFE-67</p></header>
-    <main>
-        <h1>404 — Tidak Ditemukan</h1>
-        <p>Halaman atau data tidak ditemukan.</p>
-        <p><a href="{{ route('home') }}">Kembali ke Beranda</a></p>
-    </main>
-    <footer><p>STIKSAFE-67 — angkatan 2026–2027</p></footer>
-</body>
-</html>
+<!DOCTYPE html><html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0B1120"><title>404 | STIKSAFE</title>@vite(['resources/css/app.css'])<style>body{margin:0;min-height:100vh;display:grid;place-items:center;background:#0B1120 url('{{ asset('img/cyber-grid.svg') }}') center/cover;color:#f8fafc}.error-card{width:min(560px,calc(100% - 36px));padding:38px;border:1px solid rgba(70,130,180,.3);border-radius:18px;background:rgba(15,23,42,.84);backdrop-filter:blur(12px)}.brand{display:flex;align-items:center;gap:10px;font-weight:800}.brand img{width:38px}.code{margin:35px 0 0;color:#FF6700;font:700 14px 'JetBrains Mono',monospace}h1{font-size:38px;margin:8px 0}.muted{color:#91a0b4;line-height:1.7}.btn{display:inline-block;margin-top:14px;padding:12px 16px;border-radius:8px;background:#FF6700;color:#111827;text-decoration:none;font-weight:700}</style></head><body><main class="error-card"><a class="brand" href="{{ route('home') }}"><img src="{{ asset('img/stiksafe-logo.svg') }}" alt="">STIKSAFE</a><p class="code">ERROR / 404</p><h1>Halaman tidak ditemukan.</h1><p class="muted">Alamat mungkin salah atau halaman sudah dipindahkan.</p><a class="btn" href="{{ route('home') }}">Kembali ke beranda →</a></main></body></html>

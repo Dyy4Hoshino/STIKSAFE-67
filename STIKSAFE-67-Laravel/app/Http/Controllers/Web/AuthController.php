@@ -8,6 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
@@ -43,6 +44,63 @@ class AuthController extends Controller
         $request->session()->regenerate();
 
         return redirect()->intended('/dashboard');
+    }
+
+    public function showForgotPassword(): View
+    {
+        return view('auth.forgot-password');
+    }
+
+    public function sendResetLink(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'email' => ['required', 'email', 'max:254'],
+        ]);
+
+        Password::sendResetLink([
+            'email' => strtolower(trim($request->string('email')->toString())),
+        ]);
+
+        return back()->with('status', 'Jika email terdaftar, tautan untuk mengatur ulang kata sandi telah dikirim.');
+    }
+
+    public function showResetPassword(Request $request, string $token): View
+    {
+        return view('auth.reset-password', [
+            'token' => $token,
+            'email' => $request->query('email'),
+        ]);
+    }
+
+    public function resetPassword(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'token' => ['required'],
+            'email' => ['required', 'email', 'max:254'],
+            'password' => ['required', 'string', 'min:12', 'confirmed'],
+        ]);
+
+        $status = Password::reset(
+            [
+                'email' => strtolower(trim($validated['email'])),
+                'password' => $validated['password'],
+                'password_confirmation' => $request->input('password_confirmation'),
+                'token' => $validated['token'],
+            ],
+            function (User $user, string $password): void {
+                $user->forceFill([
+                    'password' => Hash::make($password),
+                ])->save();
+            },
+        );
+
+        if ($status !== Password::PASSWORD_RESET) {
+            return back()->withErrors([
+                'email' => __($status),
+            ])->withInput($request->only('email'));
+        }
+
+        return redirect()->route('login')->with('status', 'Kata sandi berhasil diatur ulang. Silakan masuk.');
     }
 
     public function showRegister(): View

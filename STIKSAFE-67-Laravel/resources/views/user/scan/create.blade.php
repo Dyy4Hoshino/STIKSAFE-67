@@ -1,51 +1,7 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scan File | STIKSAFE-67</title>
-</head>
-<body>
-    <a href="#main-content">Lewati ke konten utama</a>
-    <header>
-        <p>STIKSAFE-67</p>
-        <nav aria-label="Navigasi utama">
-            <ul>
-                <li><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                <li><a href="{{ route('scan.create') }}" aria-current="page">Scan File</a></li>
-                <li><form method="post" action="{{ route('logout') }}">@csrf<button type="submit">Keluar</button></form></li>
-            </ul>
-        </nav>
-    </header>
-    <main id="main-content">
-        <h1>Scan File</h1>
-        <p>File diterima, masuk antrean, dianalisis, lalu hasilnya dapat dilihat.</p>
-
-        @if ($errors->any())
-            <section role="alert" aria-labelledby="error-title">
-                <h2 id="error-title">Terjadi kesalahan</h2>
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li><a href="#file">{{ $error }}</a></li>
-                    @endforeach
-                </ul>
-            </section>
-        @endif
-
-        <form method="post" action="{{ route('scan.store') }}" enctype="multipart/form-data">
-            @csrf
-            <input type="hidden" name="idempotency_key" value="{{ $idempotencyKey }}">
-            <p>
-                <label for="file">Pilih file</label>
-                <input id="file" name="file" type="file" required>
-            </p>
-            <p>Format yang didukung: Semua jenis file (termasuk deteksi file eksekusi yang menyamar sebagai dokumen atau gambar).</p>
-            <p>Batas ukuran: 25 MB.</p>
-            <p>Perhatian: Unggah hanya file yang Anda berhak analisis. Jangan menutup halaman sampai konfirmasi muncul.</p>
-            <p>Perhatian: Atribut penerimaan file hanya petunjuk browser. Backend tetap memvalidasi jenis, isi, dan ukuran file.</p>
-            <button type="submit">Mulai Scan</button>
-        </form>
-    </main>
-    <footer><p>STIKSAFE-67 — angkatan 2026–2027</p></footer>
-</body>
-</html>
+@extends('layouts.app')
+@section('title', 'Scan File | STIKSAFE-67')
+@section('content')
+<div class="eyebrow">FILE ANALYSIS / SECURE INTAKE</div><h1>Periksa file.</h1><p class="muted">Unggah file untuk dimasukkan ke antrean analisis. File tidak dijalankan selama proses.</p>
+<div class="panel" style="max-width:780px;margin-top:24px"><form method="post" action="{{ route('scan.store') }}" enctype="multipart/form-data">@csrf<input type="hidden" name="idempotency_key" value="{{ $idempotencyKey }}"><label for="file" id="drop-area" style="display:grid;place-items:center;min-height:230px;padding:25px;text-align:center;border:1px dashed rgba(70,130,180,.65);border-radius:14px;background:linear-gradient(140deg,rgba(70,130,180,.1),rgba(255,103,0,.04));cursor:pointer"><span style="font-size:35px;color:#FF6700">⬆</span><strong style="margin:10px 0">Pilih file untuk diperiksa</strong><span class="muted" id="file-name">Klik area ini untuk memilih file</span><input id="file" name="file" type="file" required style="max-width:100%;margin-top:16px;color:#a8b4c7"></label>@error('file')<p class="error">{{ $message }}</p>@enderror<div class="grid" style="grid-template-columns:repeat(2,1fr);margin-top:18px"><div class="stat"><span>BATAS UKURAN</span><strong style="font-size:17px;color:#f8fafc">25 MB</strong></div><div class="stat"><span>METODE</span><strong style="font-size:17px;color:#f8fafc">Analisis statis</strong></div></div><p class="muted" style="font-size:12px">Unggah hanya file yang berhak Anda analisis. Backend tetap memvalidasi jenis, isi, dan ukuran file.</p><div class="actions"><button class="btn primary" type="submit">Mulai scan →</button><a class="btn" href="{{ route('dashboard') }}">Kembali</a></div></form></div>
+<script>document.getElementById('file').addEventListener('change', function(){document.getElementById('file-name').textContent=this.files.length?this.files[0].name:'Klik area ini untuk memilih file'});</script>
+@endsection

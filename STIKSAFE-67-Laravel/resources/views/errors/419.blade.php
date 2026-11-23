@@ -1,17 +1,1 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Halaman Kedaluwarsa (419) | STIKSAFE-67</title>
-</head>
-<body>
-    <header><p>STIKSAFE-67</p></header>
-    <main>
-        <h1>419 — Halaman Kedaluwarsa</h1>
-        <p>Halaman telah kedaluwarsa. Muat ulang halaman lalu coba lagi.</p>
-        <p><a href="{{ url()->current() }}">Muat ulang halaman</a></p>
-    </main>
-    <footer><p>STIKSAFE-67 — angkatan 2026–2027</p></footer>
-</body>
-</html>
+<!DOCTYPE html><html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>419 | STIKSAFE</title>@vite(['resources/css/app.css'])<style>body{margin:0;min-height:100vh;display:grid;place-items:center;background:#0B1120 url('{{ asset('img/cyber-grid.svg') }}') center/cover;color:#f8fafc}.card{width:min(560px,calc(100% - 36px));padding:38px;border:1px solid rgba(70,130,180,.3);border-radius:18px;background:rgba(15,23,42,.84);backdrop-filter:blur(12px)}.brand{display:flex;align-items:center;gap:10px;font-weight:800;color:#f8fafc;text-decoration:none}.brand img{width:38px}.code{margin:35px 0 0;color:#FF6700;font:700 14px 'JetBrains Mono',monospace}h1{font-size:38px;margin:8px 0}.muted{color:#91a0b4;line-height:1.7}.btn{display:inline-block;margin-top:14px;padding:12px 16px;border-radius:8px;background:#FF6700;color:#111827;text-decoration:none;font-weight:700}</style></head><body><main class="card"><a class="brand" href="{{ route('home') }}"><img src="{{ asset('img/stiksafe-logo.svg') }}" alt="">STIKSAFE</a><p class="code">ERROR / 419</p><h1>Sesi kedaluwarsa.</h1><p class="muted">Muat ulang halaman dan kirim ulang permintaan.</p><a class="btn" href="{{ url()->current() }}">Muat ulang →</a></main></body></html>
