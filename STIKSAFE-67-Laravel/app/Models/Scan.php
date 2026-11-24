@@ -5,14 +5,21 @@ namespace App\Models;
 use App\Enums\ScanResultLabel;
 use App\Enums\ScanStatus;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
+use Database\Factories\ScanFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Scan extends Model
 {
     use HasFactory, HasUlids;
+
+    protected static function newFactory()
+    {
+        return ScanFactory::new();
+    }
 
     protected $fillable = [
         'user_id',
@@ -60,10 +67,11 @@ class Scan extends Model
         ];
     }
 
-    public function user(): BelongsTo
+    public function feedback(): HasOne
     {
-        return $this->belongsTo(User::class);
+        return $this->hasOne(ScanFeedback::class);
     }
+
 
     public function attempts(): HasMany
     {

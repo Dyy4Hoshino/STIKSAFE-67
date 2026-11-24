@@ -1,7 +1,10 @@
 <?php
 
+use App\Http\Controllers\Web\AdminAuditLogController;
 use App\Http\Controllers\Web\AdminDashboardController;
 use App\Http\Controllers\Web\AdminScanController;
+use App\Http\Controllers\Web\AdminSettingsController;
+use App\Http\Controllers\Web\AdminUserController;
 use App\Http\Controllers\Web\AuthController;
 use App\Http\Controllers\Web\ConfirmController;
 use App\Http\Controllers\Web\DashboardController;
@@ -9,6 +12,7 @@ use App\Http\Controllers\Web\HistoryController;
 use App\Http\Controllers\Web\NotificationController;
 use App\Http\Controllers\Web\ProfileController;
 use App\Http\Controllers\Web\ScanController;
+use App\Http\Controllers\Web\ScanFeedbackController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -50,6 +54,7 @@ Route::middleware(['auth', 'verified'])->group(function (): void {
     Route::get('/scan', [ScanController::class, 'create'])->name('scan.create');
     Route::post('/scan', [ScanController::class, 'store'])->name('scan.store');
     Route::get('/scans/{id}', [ScanController::class, 'show'])->name('scans.show');
+    Route::post('/scans/{id}/feedback', [ScanFeedbackController::class, 'store'])->name('scans.feedback.store');
     Route::get('/scans/{id}/cancel', [ScanController::class, 'cancel'])->name('scans.cancel');
     Route::get('/confirm', [ConfirmController::class, 'show'])->name('confirm');
     Route::delete('/history/{id}', [HistoryController::class, 'destroy'])->name('history.destroy');
@@ -67,5 +72,14 @@ Route::middleware(['auth', 'verified'])->group(function (): void {
         Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
         Route::get('/scans', [AdminScanController::class, 'index'])->name('scans');
         Route::get('/scans/{id}', [AdminScanController::class, 'show'])->name('scans.show');
+        Route::post('/scans/{id}/retry', [AdminScanController::class, 'retry'])->name('scans.retry');
+        Route::get('/audit-logs', [AdminAuditLogController::class, 'index'])->name('audit-logs');
+        Route::get('/users', [AdminUserController::class, 'index'])->name('users');
+        Route::get('/users/{user}', [AdminUserController::class, 'show'])->name('users.show');
+        Route::patch('/users/{user}/status', [AdminUserController::class, 'updateStatus'])->name('users.status');
+        Route::patch('/users/{user}/role', [AdminUserController::class, 'updateRole'])->name('users.role');
+        Route::post('/users/{user}/force-logout', [AdminUserController::class, 'forceLogout'])->name('users.force-logout');
+        Route::get('/settings', [AdminSettingsController::class, 'index'])->name('settings');
+        Route::put('/settings', [AdminSettingsController::class, 'update'])->name('settings.update');
     });
 });

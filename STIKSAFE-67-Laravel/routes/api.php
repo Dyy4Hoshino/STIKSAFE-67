@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\V1\DashboardController;
 use App\Http\Controllers\Api\V1\ForgotPasswordController;
 use App\Http\Controllers\Api\V1\ProfileController;
 use App\Http\Controllers\Api\V1\ScanController;
+use App\Http\Controllers\Api\V1\ScanFeedbackController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function (): void {
@@ -34,6 +35,7 @@ Route::prefix('v1')->group(function (): void {
 
         // Scans
         Route::post('/scans', [ScanController::class, 'store']);
+        Route::post('/scans/{scan}/feedback', [ScanFeedbackController::class, 'store']);
         Route::get('/scans', [ScanController::class, 'index']);
         Route::get('/scans/{scan}', [ScanController::class, 'show']);
         Route::get('/scans/{scan}/status', [ScanController::class, 'status']);

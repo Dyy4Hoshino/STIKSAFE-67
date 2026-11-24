@@ -16,6 +16,7 @@ class HttpScanEngineClient implements ScanEngineClient
         $baseUrl = rtrim((string) config('services.ml.base_url', 'http://localhost:8001'), '/');
         $token = (string) config('services.ml.service_token', '');
         $timeout = (int) config('services.ml.timeout', 120);
+        $requestId = $attempt->ml_request_id ?? (string) Str::uuid();
 
         if (! Storage::disk($scan->storage_disk)->exists($scan->stored_path)) {
             return new ScanEngineResult(
@@ -28,16 +29,22 @@ class HttpScanEngineClient implements ScanEngineClient
         $fileStream = Storage::disk($scan->storage_disk)->readStream($scan->stored_path);
 
         try {
-            $response = Http::withToken($token)
-                ->timeout($timeout)
-                ->connectTimeout(5)
-                ->withHeaders([
-                    'X-Request-ID' => $attempt->ml_request_id ?? (string) Str::uuid(),
-                    'Idempotency-Key' => $attempt->ml_request_id ?? (string) Str::uuid(),
-                ])
+            $request = Http::withHeaders([
+                'X-Request-ID' => $requestId,
+                'Idempotency-Key' => $requestId,
+            ])
+            ->timeout($timeout)
+            ->connectTimeout(5);
+
+            if ($token !== '') {
+                $request = $request->withToken($token);
+            }
+
+            $response = $request
                 ->attach('file', $fileStream, $scan->original_filename)
                 ->post("{$baseUrl}/v1/scans", [
                     'scan_id' => $scan->id,
+                    'request_id' => $requestId,
                     'sha256' => $scan->sha256,
                     'size_bytes' => $scan->file_size,
                     'extension' => $scan->extension,
