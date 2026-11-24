@@ -1,0 +1,21 @@
+# Lingkungan virtual & cache Python
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Dataset mentah & arsip unduhan besar (tidak di-commit)
+data/
+models/downloaded/
+
+# Daftar hitam URLhaus (berisi URL malware asli & aturan lisensi abuse.ch melarang redistribusi publik)
+models/url-v1/blocklist.txt
+
+# Berkas model biner besar (kirim lewat jalur privat tim, bukan repo publik)
+models/ember2024-pe-v1/*.model
+models/url-v1/*.model
+
+# Berkas sementara / paket serah-terima lokal
+*.zip
+.DS_Store
+Thumbs.db

@@ -1,0 +1,10 @@
+# Layanan
+fastapi
+uvicorn[standard]
+python-multipart
+httpx          # skrip uji & TestClient
+# Model nyata
+numpy
+lightgbm
+signify<0.8      # thrember butuh signify < 0.8: >=0.8 membuat CertificateStore bukan list, >=0.9 memindahkan SignedPEFile
+# thrember dipasang terpisah dari GitHub (lihat README)
