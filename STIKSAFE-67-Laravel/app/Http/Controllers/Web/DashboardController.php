@@ -9,6 +9,15 @@ use Illuminate\View\View;
 
 class DashboardController extends Controller
 {
+    public function landingOrDashboard(Request $request)
+    {
+        if ($request->user()) {
+            return $this->index($request);
+        }
+
+        return view('public.landing');
+    }
+
     public function index(Request $request): View
     {
         $user = $request->user();

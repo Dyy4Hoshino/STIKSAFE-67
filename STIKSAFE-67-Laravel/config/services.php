@@ -37,7 +37,8 @@ return [
 
     'ml' => [
         'driver' => env('ML_SCAN_DRIVER', 'fake'),
-        'base_url' => env('ML_SERVICE_URL', 'http://localhost:8001'),
+        'base_url' => env('ML_SERVICE_URL', 'http://127.0.0.1:8001'),
+        'url' => env('ML_SERVICE_URL', 'http://127.0.0.1:8001'),
         'service_token' => env('ML_SERVICE_TOKEN', ''),
         'timeout' => (int) env('ML_SERVICE_TIMEOUT', 120),
     ],

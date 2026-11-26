@@ -43,7 +43,7 @@ class TestSuccess(Base):
         status, body, headers = self.scan(data)
         self.assertEqual(status, 200)
         self.assertEqual(body["status"], "completed")
-        self.assertEqual(body["scan_id"], SCAN_ID)
+        self.assertEqual(body["scan_id"], SCAN_ID.lower())
         self.assertEqual(body["request_id"], REQ_ID)
         import hashlib
         self.assertEqual(body["sha256"], hashlib.sha256(data).hexdigest())

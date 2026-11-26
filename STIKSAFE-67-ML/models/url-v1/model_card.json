@@ -1,0 +1,91 @@
+{
+  "model_version": "url-lgbm-hostonly-1",
+  "model_file": "URL_LGBM.model",
+  "model_sha256": "bf2a8f2c43869d7ae5fbcccb8752fd941f4a7f4889c8875e072e77ac511dc3f6",
+  "dataset_version": "PhiUSIIL (UCI #967, CC BY 4.0), dipecah per domain",
+  "preprocessing_version": "urlfeat-v2",
+  "feature_dim": 34,
+  "thresholds": {
+    "t_suspicious": 0.743984047867154,
+    "t_malicious": 0.9787035155215109,
+    "c_min": 0.5
+  },
+  "status": "staging",
+  "provisional": true,
+  "metrics": {
+    "kept_features": [
+      "has_punycode",
+      "has_userinfo",
+      "host_digit_ratio",
+      "host_digits",
+      "host_dots",
+      "host_entropy",
+      "host_hyphens",
+      "host_len",
+      "is_ip",
+      "is_shortener",
+      "longest_label_len",
+      "n_subdomains",
+      "nonstandard_port",
+      "tld_len"
+    ],
+    "test": {
+      "n_benign": 18755,
+      "n_malicious": 16006,
+      "fpr_at_t_suspicious": 0.010343908291122368,
+      "fpr_at_t_malicious": 0.000693148493735004,
+      "recall_at_t_suspicious": 0.6066475071848056,
+      "recall_at_t_malicious": 0.3819192802698988,
+      "roc_auc": 0.8642174806948061
+    },
+    "comparison": {
+      "all_features": {
+        "n_benign": 18755,
+        "n_malicious": 16006,
+        "fpr_at_t_suspicious": 0.010130631831511597,
+        "fpr_at_t_malicious": 0.0008531058384430818,
+        "recall_at_t_suspicious": 0.9966887417218543,
+        "recall_at_t_malicious": 0.9961264525802824,
+        "roc_auc": 0.9989531435042704
+      },
+      "host_only": {
+        "n_benign": 18755,
+        "n_malicious": 16006,
+        "fpr_at_t_suspicious": 0.010343908291122368,
+        "fpr_at_t_malicious": 0.000693148493735004,
+        "recall_at_t_suspicious": 0.6066475071848056,
+        "recall_at_t_malicious": 0.3819192802698988,
+        "roc_auc": 0.8642174806948061
+      }
+    },
+    "top_features_gain_pct": [
+      [
+        "host_len",
+        39.0
+      ],
+      [
+        "host_digits",
+        19.7
+      ],
+      [
+        "host_dots",
+        11.4
+      ],
+      [
+        "tld_len",
+        9.6
+      ],
+      [
+        "longest_label_len",
+        6.7
+      ],
+      [
+        "host_entropy",
+        5.3
+      ]
+    ],
+    "external": {},
+    "caveat": "Dataset PhiUSIIL diketahui terlalu mudah; kinerja nyata di web belum terukur. Label safe dimatikan untuk URL."
+  },
+  "created_at": "2026-11-19T04:47:00Z"
+}

@@ -104,6 +104,9 @@ class ProcessScanJob implements ShouldQueue
                 'threat_name' => $result->threatName,
                 'threat_category' => $result->threatCategory,
                 'model_version' => $result->modelVersion,
+                'reason_codes' => $result->reasonCodes,
+                'analysis' => $result->analysis,
+                'preprocessing_version' => $result->preprocessingVersion,
                 'completed_at' => now(),
             ]);
         } else {

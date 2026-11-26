@@ -30,7 +30,7 @@ class AdminSettingsController extends Controller
             }
 
             try {
-                $response = Http::timeout(3)->get($url.'/health');
+                $response = Http::withToken((string) config('services.ml.service_token', ''))->timeout(3)->get($url.'/v1/health');
                 return ['available' => $response->successful(), 'message' => $response->successful() ? 'Online' : 'Health check gagal.'];
             } catch (\Throwable) {
                 return ['available' => false, 'message' => 'ML service tidak dapat dijangkau.'];

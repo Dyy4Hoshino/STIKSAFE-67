@@ -17,7 +17,7 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', fn () => view('public.landing'))->name('home');
+Route::get('/', [DashboardController::class, 'landingOrDashboard'])->name('home');
 Route::get('/tentang', fn () => view('public.about'))->name('about');
 
 Route::middleware('guest')->group(function (): void {
@@ -50,10 +50,12 @@ Route::middleware('auth')->group(function (): void {
 });
 
 Route::middleware(['auth', 'verified'])->group(function (): void {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', fn () => redirect()->route('home'))->name('dashboard');
     Route::get('/scan', [ScanController::class, 'create'])->name('scan.create');
     Route::post('/scan', [ScanController::class, 'store'])->name('scan.store');
+    Route::post('/scan-url', [ScanController::class, 'storeUrl'])->name('scan.url');
     Route::get('/scans/{id}', [ScanController::class, 'show'])->name('scans.show');
+    Route::get('/scans/{id}/status', [ScanController::class, 'status'])->name('scans.status');
     Route::post('/scans/{id}/feedback', [ScanFeedbackController::class, 'store'])->name('scans.feedback.store');
     Route::get('/scans/{id}/cancel', [ScanController::class, 'cancel'])->name('scans.cancel');
     Route::get('/confirm', [ConfirmController::class, 'show'])->name('confirm');
@@ -65,6 +67,7 @@ Route::middleware(['auth', 'verified'])->group(function (): void {
     Route::post('/notifications/read-all', [NotificationController::class, 'markAllRead'])->name('notifications.read-all');
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::post('/profile/avatar', [ProfileController::class, 'updateAvatar'])->name('profile.avatar');
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 

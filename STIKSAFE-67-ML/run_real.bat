@@ -9,5 +9,5 @@ set ML_URL_MODEL_DIR=models\url-v1
 set ML_URL_BLOCKLIST=models\url-v1\blocklist.txt
 set ML_TMP_DIR=%TEMP%\stiksafe
 set ML_EXTRACT_TIMEOUT_SEC=30
-echo Layanan (MODEL NYATA) di http://127.0.0.1:8000  (hentikan dengan Ctrl+C)
-python -m uvicorn --factory stiksafe_ml.api:create_app --host 127.0.0.1 --port 8000
+echo Layanan (MODEL NYATA) di http://127.0.0.1:8001  (hentikan dengan Ctrl+C)
+python -m uvicorn --factory stiksafe_ml.api:create_app --host 127.0.0.1 --port 8001

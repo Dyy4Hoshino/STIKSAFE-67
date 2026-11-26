@@ -19,7 +19,7 @@ class TestMetadata(unittest.TestCase):
         self.assertEqual(cm.exception.code, "ML_INVALID_REQUEST")
 
     def test_ok(self):
-        self.assertEqual(parse_metadata(json.dumps(GOOD)).scan_id, SCAN_ID)
+        self.assertEqual(parse_metadata(json.dumps(GOOD)).scan_id, SCAN_ID.lower())
 
     def test_rejects(self):
         self.bad(scan_id="bukan-ulid"); self.bad(request_id="123"); self.bad(sha256="xyz")

@@ -13,6 +13,11 @@ class ScanEngineResult
         public readonly ?string $modelVersion = null,
         public readonly ?string $errorCode = null,
         public readonly ?string $errorMessage = null,
+        public readonly array $reasonCodes = [],
+        public readonly ?array $analysis = null,
+        public readonly ?string $preprocessingVersion = null,
+        public readonly ?string $scannedAt = null,
+        public readonly ?int $durationMs = null,
     ) {}
 
     public function isCompleted(): bool

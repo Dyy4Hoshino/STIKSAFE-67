@@ -8,7 +8,8 @@ from urllib.parse import urlparse
 
 from .errors import MLError
 
-ULID_RE = re.compile(r"^[0-7][0-9A-HJKMNP-TV-Z]{25}$")
+# Laravel HasUlids menghasilkan ULID lowercase; kontrak menerima uppercase/lowercase.
+ULID_RE = re.compile(r"^[0-7][0-9A-HJKMNP-TV-Z]{25}$", re.IGNORECASE)
 UUID_RE = re.compile(r"^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$")
 SHA256_RE = re.compile(r"^[0-9a-fA-F]{64}$")
 
@@ -31,7 +32,7 @@ def peek_ids(raw: Any) -> Tuple[Optional[str], Optional[str]]:
     try:
         d = raw if isinstance(raw, dict) else json.loads(raw)
         s, r = d.get("scan_id"), d.get("request_id")
-        return (s if isinstance(s, str) and ULID_RE.match(s) else None,
+        return (s.lower() if isinstance(s, str) and ULID_RE.match(s) else None,
                 r if isinstance(r, str) and UUID_RE.match(r) else None)
     except Exception:
         return None, None
@@ -92,7 +93,7 @@ def parse_metadata(raw: Any, allowed_callback_hosts: Tuple[str, ...] = ()) -> Me
     ext = opt_str("declared_extension")
     declared = ext.lower().lstrip(".") if ext else (chain[-1] if chain else None)
     return Metadata(
-        scan_id=scan_id, request_id=request_id.lower(), sha256=sha256.lower(),
+        scan_id=scan_id.lower(), request_id=request_id.lower(), sha256=sha256.lower(),
         size_bytes=size, submitted_at=submitted_at,
         declared_extension=declared,
         detected_mime=opt_str("detected_mime"), callback_url=callback_url,
