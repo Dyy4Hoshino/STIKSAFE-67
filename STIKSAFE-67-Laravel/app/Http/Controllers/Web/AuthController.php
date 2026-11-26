@@ -130,7 +130,8 @@ class AuthController extends Controller
         Auth::login($user);
         $request->session()->regenerate();
 
-        return redirect()->route('verification.notice');
+        // return redirect()->route('verification.notice');
+        return redirect()->route('home');
     }
 
     public function logout(Request $request): RedirectResponse

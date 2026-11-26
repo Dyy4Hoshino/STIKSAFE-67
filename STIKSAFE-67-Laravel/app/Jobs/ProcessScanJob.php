@@ -158,7 +158,7 @@ class ProcessScanJob implements ShouldQueue
         $attempt->forceFill([
             'status' => ScanAttemptStatus::Succeeded,
             'finished_at' => now(),
-            'duration_ms' => (int) ($attempt->started_at ? now()->diffInMilliseconds($attempt->started_at) : 0),
+            'duration_ms' => (int) ($attempt->started_at ? max(0, $attempt->started_at->diffInMilliseconds(now())) : 0),
         ])->save();
     }
 
@@ -169,7 +169,7 @@ class ProcessScanJob implements ShouldQueue
             'error_code' => $code,
             'error_message' => $message,
             'finished_at' => now(),
-            'duration_ms' => (int) ($attempt->started_at ? now()->diffInMilliseconds($attempt->started_at) : 0),
+            'duration_ms' => (int) ($attempt->started_at ? max(0, $attempt->started_at->diffInMilliseconds(now())) : 0),
         ])->save();
     }
 

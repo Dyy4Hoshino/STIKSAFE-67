@@ -51,7 +51,7 @@ Route::middleware('auth')->group(function (): void {
     })->middleware('throttle:6,1')->name('verification.send');
 });
 
-Route::middleware(['auth', 'verified'])->group(function (): void {
+Route::middleware(['auth'])->group(function (): void {
     Route::get('/dashboard', fn () => redirect()->route('home'))->name('dashboard');
     Route::get('/scan', [ScanController::class, 'create'])->name('scan.create');
     Route::post('/scan', [ScanController::class, 'store'])->name('scan.store');

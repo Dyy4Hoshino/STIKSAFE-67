@@ -26,6 +26,7 @@ class TempStore:
         Mengembalikan (path, size, sha256_hex). Pemanggil WAJIB menghapus lewat remove().
         """
         import tempfile
+        os.makedirs(self.dir, mode=0o700, exist_ok=True)
         fd, path = tempfile.mkstemp(dir=self.dir, prefix="scan_", suffix=".bin")  # mkstemp = 0600
         if os.name == "posix":          # Linux/Mac: paksa izin 0600. Windows tidak mengenal izin gaya ini
             os.fchmod(fd, 0o600)
