@@ -16,6 +16,10 @@
         .nav a{color:#cbd5e1;text-decoration:none;transition:color .15s}
         .nav a:hover{color:#FF6700}
         .nav form{display:inline}
+        .nav-group{display:flex;align-items:center;gap:12px}
+        .nav-admin{border-left:1px solid rgba(255,103,0,.45);padding-left:14px}
+        .nav-admin-label{color:#FF8A38;font:10px 'JetBrains Mono',monospace;letter-spacing:.08em}
+        .nav-badge{display:inline-grid;place-items:center;min-width:18px;height:18px;padding:0 5px;border-radius:999px;background:#FF6700;color:#111827;font-size:10px;font-weight:800}
         .nav button,.btn{border:1px solid rgba(70,130,180,.35);border-radius:8px;background:rgba(15,23,42,.8);color:#f8fafc;padding:9px 14px;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;text-decoration:none;display:inline-block;transition:all .15s}
         .btn:hover{border-color:#FF6700}
         .btn.primary{background:#FF6700;border-color:#FF6700;color:#111827}
@@ -61,26 +65,36 @@
         <span>STIK<em>SAFE</em></span>
     </a>
     
-    <nav class="nav">
-        <a href="{{ route('home') }}">Beranda</a>
-        <a href="{{ route('scan.create') }}">Scan</a>
-        <a href="{{ route('history') }}">Riwayat</a>
-        <a href="{{ route('notifications') }}">
-            Notifikasi
-            @php($unreadNotificationCount = auth()->user()?->unreadNotifications()->count() ?? 0)
-            @if($unreadNotificationCount > 0)
-                <span style="color:#10B981">({{ $unreadNotificationCount }})</span>
-            @endif
-        </a>
+    <nav class="nav" aria-label="Navigasi utama">
+        <div class="nav-group" aria-label="Menu bersama">
+            <a href="{{ route('home') }}">Beranda</a>
+            @auth
+                <a href="{{ route('scan.create') }}">Scan</a>
+                <a href="{{ route('history') }}">Riwayat</a>
+                <a href="{{ route('notifications') }}">
+                    Notifikasi
+                    @php($unreadNotificationCount = auth()->user()->unreadNotifications()->count())
+                    @if($unreadNotificationCount > 0)
+                        <span class="nav-badge" aria-label="{{ $unreadNotificationCount }} belum dibaca">{{ $unreadNotificationCount }}</span>
+                    @endif
+                </a>
+            @else
+                <a href="{{ route('login') }}">Masuk</a>
+            @endauth
+        </div>
 
         @if(auth()->user()?->role === 'admin')
-            <a href="{{ route('admin.dashboard') }}" style="color:#FF8A38">Admin</a>
-            <a href="{{ route('admin.scans') }}">Scan Log</a>
-            <a href="{{ route('admin.users') }}">Pengguna</a>
-            <a href="{{ route('admin.settings') }}">Setelan</a>
+            @php($newFeedbackCount = \App\Models\ScanFeedback::query()->whereNull('reviewed_at')->count())
+            <div class="nav-group nav-admin" aria-label="Menu khusus Admin">
+                <span class="nav-admin-label">ADMIN</span>
+                <a href="{{ route('admin.dashboard') }}">Dashboard</a>
+                <a href="{{ route('admin.scans') }}">Scan Log</a>
+                <a href="{{ route('admin.users') }}">Pengguna</a>
+                <a href="{{ route('admin.feedback') }}">Feedback <span class="nav-badge">{{ $newFeedbackCount }}</span></a>
+                <a href="{{ route('admin.settings') }}">Setelan</a>
+            </div>
         @endif
 
-        {{-- AVATAR DI POJOK KANAN ATAS --}}
         @auth
             <a href="{{ route('profile') }}" class="nav-profile" title="Buka Profil">
                 @if(auth()->user()->avatar_path)

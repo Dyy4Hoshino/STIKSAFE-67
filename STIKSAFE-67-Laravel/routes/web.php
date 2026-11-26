@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Web\AdminAuditLogController;
 use App\Http\Controllers\Web\AdminDashboardController;
+use App\Http\Controllers\Web\AdminFeedbackController;
+use App\Http\Controllers\Web\AdminNotificationBroadcastController;
 use App\Http\Controllers\Web\AdminScanController;
 use App\Http\Controllers\Web\AdminSettingsController;
 use App\Http\Controllers\Web\AdminUserController;
@@ -79,6 +81,10 @@ Route::middleware(['auth', 'verified'])->group(function (): void {
         Route::get('/audit-logs', [AdminAuditLogController::class, 'index'])->name('audit-logs');
         Route::get('/users', [AdminUserController::class, 'index'])->name('users');
         Route::get('/users/{user}', [AdminUserController::class, 'show'])->name('users.show');
+        Route::get('/feedback', [AdminFeedbackController::class, 'index'])->name('feedback');
+        Route::patch('/feedback/{feedback}/review', [AdminFeedbackController::class, 'review'])->name('feedback.review');
+        Route::get('/notifications/create', [AdminNotificationBroadcastController::class, 'create'])->name('notifications.create');
+        Route::post('/notifications', [AdminNotificationBroadcastController::class, 'store'])->name('notifications.store');
         Route::patch('/users/{user}/status', [AdminUserController::class, 'updateStatus'])->name('users.status');
         Route::patch('/users/{user}/role', [AdminUserController::class, 'updateRole'])->name('users.role');
         Route::post('/users/{user}/force-logout', [AdminUserController::class, 'forceLogout'])->name('users.force-logout');
