@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [DashboardController::class, 'landingOrDashboard'])->name('home');
 Route::get('/tentang', fn () => view('public.about'))->name('about');
+Route::get('/ml-status', [DashboardController::class, 'mlStatus'])->name('ml.status');
 
 Route::middleware('guest')->group(function (): void {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');

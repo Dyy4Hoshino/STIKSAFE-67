@@ -3,15 +3,14 @@
 
 @section('content')
 <div class="profile-page">
-    <div class="eyebrow">ACCOUNT / SETTINGS</div>
+    <div class="eyebrow">PENGATURAN AKUN</div>
     <h1>Profil Anda.</h1>
-    <p class="muted">Kelola identitas, foto profil, dan keamanan akun.</p>
+    <p class="muted" style="margin:0 0 18px">Kelola identitas, foto profil, dan keamanan akun.</p>
 
     @if (session('status'))
-        <p class="alert" role="status" style="border-color:#10b98166;background:#10b98111;color:#6ee7b7">{{ session('status') }}</p>
+        <p class="alert alert-success" role="status">{{ session('status') }}</p>
     @endif
 
-    {{-- KARTU INFO AKUN & FOTO PROFIL --}}
     <section class="panel profile-card">
         <div class="profile-heading">
             <div class="avatar-wrap">
@@ -21,24 +20,23 @@
                     <div class="avatar" aria-hidden="true">{{ strtoupper(substr($user->name, 0, 1)) }}</div>
                 @endif
             </div>
-            <div style="flex-grow:1">
-                <h2 style="margin:0 0 4px">{{ $user->name }}</h2>
+            <div style="flex:1;min-width:0">
+                <h2 style="margin:0 0 2px">{{ $user->name }}</h2>
                 <p class="muted" style="margin:0">{{ $user->email }}</p>
-                <div style="margin-top:10px">
-                    <span class="eyebrow" style="color:{{ $user->role === 'admin' ? '#FF8A38' : '#10B981' }}">
+                <div style="margin-top:8px">
+                    <span class="role-badge {{ $user->role === 'admin' ? 'role-admin' : 'role-user' }}">
                         ROLE: {{ strtoupper($user->role ?? 'USER') }}
                     </span>
                 </div>
             </div>
         </div>
 
-        {{-- FORM UPLOAD FOTO PROFIL --}}
-        <div style="margin-top:20px;padding-top:18px;border-top:1px solid rgba(148,163,184,.14)">
-            <h3 style="margin:0 0 6px;font-size:15px">Ganti Foto Profil</h3>
-            <p class="muted" style="font-size:12px;margin:0 0 12px">Pilih file gambar (JPG, PNG, atau WebP, maks. 2 MB) untuk ditampilkan di pojok kanan atas.</p>
-            <form method="post" action="{{ route('profile.avatar') }}" enctype="multipart/form-data" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+        <div class="avatar-upload-box">
+            <h3 style="margin:0 0 4px;font-size:14.5px">Ganti Foto Profil</h3>
+            <p class="muted" style="font-size:12.5px;margin:0 0 12px">Pilih gambar (JPG, PNG, atau WebP, maks. 2 MB).</p>
+            <form method="post" action="{{ route('profile.avatar') }}" enctype="multipart/form-data" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
                 @csrf
-                <input type="file" name="avatar" id="avatar" required accept="image/png,image/jpeg,image/webp" style="background:#0b1120;border:1px solid rgba(70,130,180,.35);padding:8px 12px;border-radius:8px;font-size:12px;color:#cbd5e1">
+                <input type="file" name="avatar" id="avatar" required accept="image/png,image/jpeg,image/webp" class="file-picker">
                 <button class="btn primary" type="submit">Unggah Foto</button>
             </form>
             @error('avatar')<p class="error" style="margin-top:6px">{{ $message }}</p>@enderror
@@ -66,9 +64,8 @@
         </dl>
     </section>
 
-    {{-- UBAH NAMA --}}
     <section class="panel profile-card">
-        <h2>Ubah nama</h2>
+        <h2 style="margin:0 0 4px">Ubah nama</h2>
         <p class="muted section-description">Perbarui nama lengkap yang ditampilkan di akun Anda.</p>
         <form method="post" action="{{ route('profile.update') }}">
             @csrf
@@ -84,9 +81,8 @@
         </form>
     </section>
 
-    {{-- GANTI KATA SANDI --}}
     <section class="panel profile-card">
-        <h2>Ganti kata sandi</h2>
+        <h2 style="margin:0 0 4px">Ganti kata sandi</h2>
         <p class="muted section-description">Gunakan kata sandi unik untuk menjaga keamanan akun Anda.</p>
         <form method="post" action="{{ route('profile.password') }}">
             @csrf
@@ -108,15 +104,14 @@
                     <input id="password_confirmation" name="password_confirmation" type="password" required minlength="12" autocomplete="new-password">
                 </div>
             </div>
-            <p class="muted security-note">Mengganti kata sandi dapat mengakhiri sesi aktif di perangkat lain.</p>
+            <p class="muted" style="margin:14px 0;font-size:12.5px">Mengganti kata sandi dapat mengakhiri sesi aktif di perangkat lain.</p>
             <button class="btn primary" type="submit">Perbarui kata sandi</button>
         </form>
     </section>
 
-    {{-- TOMBOL KELUAR & GANTI AKUN DI PALING BAWAH --}}
-    <section class="profile-actions">
-        <p class="eyebrow">SESI & AKSES</p>
-        <p class="muted">Selesai menggunakan akun ini? Keluar atau beralih ke akun lain.</p>
+    <section class="panel profile-actions">
+        <span class="eyebrow">SESI &amp; AKSES</span>
+        <p class="muted" style="margin:6px 0 0">Selesai menggunakan akun ini? Keluar atau beralih ke akun lain.</p>
         <div class="actions actions-bottom">
             <form method="post" action="{{ route('logout') }}">
                 @csrf
@@ -131,88 +126,29 @@
 </div>
 
 <style>
-    .profile-page {
-        width: min(100%, 760px);
-        margin: 0 auto;
-        padding: 10px 0 48px;
-    }
-    .profile-card {
-        margin-top: 20px;
-        padding: 24px;
-    }
-    .profile-heading {
-        display: flex;
-        align-items: center;
-        gap: 18px;
-        flex-wrap: wrap;
-    }
-    .avatar-wrap {
-        flex: 0 0 64px;
-        width: 64px;
-        height: 64px;
-    }
-    .avatar-img {
-        width: 64px;
-        height: 64px;
-        border-radius: 50%;
-        object-fit: cover;
-        border: 2px solid #FF6700;
-        box-shadow: 0 0 16px rgba(255,103,0,.35);
-    }
-    .avatar {
-        display: grid;
-        place-items: center;
-        width: 64px;
-        height: 64px;
-        border-radius: 50%;
-        color: #fff;
-        background: linear-gradient(135deg, #FF6700, #a33b00);
-        font-size: 24px;
-        font-weight: 700;
-        border: 2px solid rgba(255,103,0,.5);
-    }
-    .account-details {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 18px;
-        margin: 22px 0 0;
-        padding-top: 18px;
-        border-top: 1px solid rgba(148,163,184,.14);
-    }
-    .account-details dt {
-        color: #91a0b4;
-        font-size: 11px;
-        text-transform: uppercase;
-        letter-spacing: .08em;
-    }
-    .account-details dd {
-        margin: 5px 0 0;
-        color: #f8fafc;
-        font-size: 14px;
-        overflow-wrap: anywhere;
-    }
-    .section-description { margin: -8px 0 20px; font-size: 13px; }
-    .field-stack { display: grid; gap: 16px; }
-    .security-note { margin: 18px 0; font-size: 12px; }
-    .profile-actions {
-        margin-top: 28px;
-        padding: 24px;
-        text-align: center;
-        border: 1px solid rgba(148,163,184,.18);
-        border-radius: 12px;
-        background: rgba(15,23,42,.45);
-    }
-    .profile-actions .eyebrow { margin-bottom: 6px; }
-    .profile-actions p { margin: 0 0 12px; }
-    .actions-bottom { justify-content: center; margin-top: 18px; }
-    .actions-bottom form { margin: 0; }
-    .btn.danger { border-color: rgba(239,68,68,.6); color: #fca5a5; }
-    @media (max-width: 650px) {
-        .profile-page { padding: 0 0 32px; }
-        .profile-card, .profile-actions { padding: 18px; }
-        .account-details { grid-template-columns: 1fr; gap: 12px; }
-        .actions-bottom { flex-direction: column; align-items: stretch; }
-        .actions-bottom form, .actions-bottom .btn { width: 100%; }
-    }
+.profile-page { width: min(100%, 740px); margin: 0 auto; }
+.profile-card { margin-top: 18px; }
+.profile-heading { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.avatar-wrap { flex: 0 0 60px; width: 60px; height: 60px; }
+.avatar-img { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid #e6e8ea; }
+.avatar { display: grid; place-items: center; width: 60px; height: 60px; border-radius: 50%; color: #ffffff; background: #a33900; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 22px; font-weight: 700; }
+.role-badge { display: inline-block; padding: 3px 9px; border-radius: 999px; font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600; }
+.role-admin { background: #fff3ed; color: #a33900; border: 1px solid #ffdbce; }
+.role-user { background: #ecfdf5; color: #006948; border: 1px solid #a7f3d0; }
+.avatar-upload-box { margin-top: 20px; padding-top: 18px; border-top: 1px solid #eceef0; }
+.file-picker { background: #f7f9fb; border: 1px solid #d8dadc; padding: 7px 10px; border-radius: 6px; font-size: 12.5px; color: #191c1e; }
+.account-details { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 20px 0 0; padding-top: 18px; border-top: 1px solid #eceef0; }
+.account-details dt { color: #565e74; font-family: 'JetBrains Mono', monospace; font-size: 10.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+.account-details dd { margin: 4px 0 0; color: #191c1e; font-size: 13.5px; font-weight: 500; overflow-wrap: anywhere; }
+.section-description { margin: 0 0 18px; font-size: 13.5px; }
+.field-stack { display: grid; gap: 14px; }
+.profile-actions { margin-top: 18px; text-align: center; }
+.actions-bottom { justify-content: center; margin-top: 16px; }
+.actions-bottom form { margin: 0; }
+@media (max-width: 640px) {
+    .account-details { grid-template-columns: 1fr; gap: 12px; }
+    .actions-bottom { flex-direction: column; align-items: stretch; }
+    .actions-bottom form, .actions-bottom .btn { width: 100%; }
+}
 </style>
 @endsection

@@ -6,60 +6,99 @@
     $firstName = explode(' ', trim($user->name))[0] ?: $user->name;
 @endphp
 
-<div class="home-page">
-    <section class="home-hero panel">
-        <div class="home-hero-copy">
+<div class="dash-wrap">
+    {{-- Welcome Card — exact original copy --}}
+    <section class="panel welcome-card">
+        <div class="welcome-copy">
             <span class="eyebrow">STIKSAFE / SECURITY CENTER</span>
             <h1>Halo, {{ $firstName }}.</h1>
-            <p>Periksa file atau URL mencurigakan, pantau hasil, lalu ambil tindakan dengan informasi yang jelas.</p>
-            <div class="home-hero-actions">
-                <a class="btn primary home-main-cta" href="{{ route('scan.create') }}">+ Mulai Scan Baru</a>
+            <p class="muted" style="margin:4px 0 0;max-width:580px">Periksa file atau URL mencurigakan, pantau hasil, lalu ambil tindakan dengan informasi yang jelas.</p>
+            <div class="welcome-actions">
+                <a class="btn primary" href="{{ route('scan.create') }}">+ Mulai Scan Baru</a>
                 <a class="btn" href="{{ route('history') }}">Lihat riwayat</a>
             </div>
         </div>
-        <div class="home-hero-status" aria-label="Status layanan">
+        <div class="status-box" aria-label="Status layanan">
             <div class="shield-mark">SAFE</div>
             <div>
-                <span class="eyebrow" style="color:#6ee7b7">SYSTEM STATUS</span>
+                <span class="eyebrow" style="color:#006948;font-size:10px">SYSTEM STATUS</span>
                 <strong>Siap memindai</strong>
-                <small>File & URL analysis</small>
+                <span>File &amp; URL analysis</span>
             </div>
         </div>
     </section>
 
-    <section class="overview-section" aria-labelledby="overview-heading">
-        <div class="section-row">
+    {{-- Section: Statistik scan — exact original copy --}}
+    <section class="dash-section" aria-labelledby="overview-heading">
+        <div class="section-bar">
             <div>
                 <span class="eyebrow">RINGKASAN AKTIVITAS</span>
-                <h2 id="overview-heading">Statistik scan</h2>
+                <h2 id="overview-heading" style="margin:3px 0 0">Statistik scan</h2>
             </div>
-            <span class="overview-period">Semua waktu</span>
+            <span class="period-pill">Semua waktu</span>
         </div>
-        <div class="overview-grid">
-            <article class="overview-stat total"><span>TOTAL SCAN</span><strong>{{ $totalScan }}</strong><small>File yang pernah diperiksa</small></article>
-            <article class="overview-stat safe"><span>AMAN</span><strong>{{ $safeCount }}</strong><small>Tidak terdeteksi ancaman</small></article>
-            <article class="overview-stat suspicious"><span>MENCURIGAKAN</span><strong>{{ $suspiciousCount }}</strong><small>Butuh perhatian</small></article>
-            <article class="overview-stat malicious"><span>BERBAHAYA</span><strong>{{ $maliciousCount }}</strong><small>Ancaman terdeteksi</small></article>
+
+        <div class="kpi-grid">
+            <article class="kpi-card">
+                <div class="kpi-head">
+                    <span class="kpi-label">TOTAL SCAN</span>
+                    <span class="kpi-icon"><span class="material-symbols-outlined" style="font-size:18px">query_stats</span></span>
+                </div>
+                <strong class="kpi-num tabular-nums">{{ $totalScan }}</strong>
+                <small class="kpi-sub">File yang pernah diperiksa</small>
+            </article>
+
+            <article class="kpi-card">
+                <div class="kpi-head">
+                    <span class="kpi-label"><span class="dot dot-safe"></span>AMAN</span>
+                    <span class="kpi-icon kpi-icon-safe"><span class="material-symbols-outlined" style="font-size:18px">verified_user</span></span>
+                </div>
+                <strong class="kpi-num tabular-nums" style="color:#006948">{{ $safeCount }}</strong>
+                <small class="kpi-sub">Tidak terdeteksi ancaman</small>
+            </article>
+
+            <article class="kpi-card">
+                <div class="kpi-head">
+                    <span class="kpi-label"><span class="dot dot-warn"></span>MENCURIGAKAN</span>
+                    <span class="kpi-icon kpi-icon-warn"><span class="material-symbols-outlined" style="font-size:18px">warning</span></span>
+                </div>
+                <strong class="kpi-num tabular-nums" style="color:#b45309">{{ $suspiciousCount }}</strong>
+                <small class="kpi-sub">Butuh perhatian</small>
+            </article>
+
+            <article class="kpi-card">
+                <div class="kpi-head">
+                    <span class="kpi-label"><span class="dot dot-danger"></span>BERBAHAYA</span>
+                    <span class="kpi-icon kpi-icon-danger"><span class="material-symbols-outlined" style="font-size:18px">gpp_bad</span></span>
+                </div>
+                <strong class="kpi-num tabular-nums" style="color:#ba1a1a">{{ $maliciousCount }}</strong>
+                <small class="kpi-sub">Ancaman terdeteksi</small>
+            </article>
         </div>
-        <div class="operation-strip">
-            <div><span class="operation-dot running"></span><strong>{{ $runningCount }}</strong> dalam antrean / diproses</div>
-            <div><span class="operation-dot incomplete"></span><strong>{{ $incompleteCount }}</strong> gagal / dibatalkan / ditolak</div>
-            <a href="{{ route('history') }}">Detail riwayat →</a>
+
+        <div class="pipeline-bar">
+            <div class="pipeline-info">
+                <span class="dot dot-warn"></span><strong>{{ $runningCount }}</strong> dalam antrean / diproses
+                <span style="margin:0 8px;color:#cbd5e1">·</span>
+                <span class="dot dot-danger"></span><strong>{{ $incompleteCount }}</strong> gagal / dibatalkan / ditolak
+            </div>
+            <a class="pipeline-link" href="{{ route('history') }}">Detail riwayat →</a>
         </div>
     </section>
 
+    {{-- Section: Scan terbaru — exact original copy --}}
     <section class="panel recent-card" aria-labelledby="recent-heading">
-        <div class="section-row recent-heading">
+        <div class="recent-head">
             <div>
                 <span class="eyebrow">ACTIVITY LOG</span>
-                <h2 id="recent-heading">Scan terbaru</h2>
-                <p class="muted">Aktivitas pemeriksaan file terbaru dalam akun Anda.</p>
+                <h2 id="recent-heading" style="margin:3px 0 2px;font-size:19px">Scan terbaru</h2>
+                <p class="muted" style="margin:0;font-size:13px">Aktivitas pemeriksaan file terbaru dalam akun Anda.</p>
             </div>
             <a class="btn" href="{{ route('history') }}">Semua riwayat</a>
         </div>
 
         @if($recentScans->isEmpty())
-            <div class="empty-scans">
+            <div class="empty-state">
                 <div class="empty-icon">SCAN</div>
                 <h3>Belum ada scan</h3>
                 <p class="muted">Mulai dengan memindai file atau URL pertama Anda.</p>
@@ -67,33 +106,55 @@
             </div>
         @else
             <div class="table-wrap">
-                <table class="data home-data">
-                    <thead><tr><th>FILE</th><th>WAKTU</th><th>HASIL</th><th></th></tr></thead>
+                <table class="data">
+                    <thead>
+                        <tr>
+                            <th>FILE</th>
+                            <th class="col-time">WAKTU</th>
+                            <th>HASIL</th>
+                            <th style="text-align:right"></th>
+                        </tr>
+                    </thead>
                     <tbody>
                     @foreach($recentScans as $scan)
                         @php
                             $scanStatus = $scan->status?->value;
                             $display = match ($scanStatus) {
                                 'queued' => ['Antrean', 'queue'],
-                                'processing' => ['Diproses', 'processing'],
+                                'processing' => ['Diproses', 'queue'],
                                 'completed' => match ($scan->result_label?->value) {
                                     'safe' => ['Aman', 'safe'],
-                                    'suspicious' => ['Mencurigakan', 'suspicious'],
-                                    'malicious' => ['Berbahaya', 'malicious'],
-                                    'unknown' => ['Tidak diketahui', 'unknown'],
-                                    default => ['Selesai', 'unknown'],
+                                    'suspicious' => ['Mencurigakan', 'warn'],
+                                    'malicious' => ['Berbahaya', 'danger'],
+                                    'unknown' => ['Tidak diketahui', 'neutral'],
+                                    default => ['Selesai', 'neutral'],
                                 },
-                                'failed' => ['Gagal', 'failed'],
-                                'cancelled' => ['Dibatalkan', 'failed'],
-                                'rejected' => ['Ditolak', 'failed'],
-                                default => ['—', 'unknown'],
+                                'failed' => ['Gagal', 'danger'],
+                                'cancelled' => ['Dibatalkan', 'neutral'],
+                                'rejected' => ['Ditolak', 'danger'],
+                                default => ['—', 'neutral'],
                             };
                         @endphp
                         <tr>
-                            <td><div class="scan-file-name"><span class="mini-file">FILE</span><span title="{{ $scan->original_filename }}">{{ $scan->original_filename }}</span></div></td>
-                            <td class="scan-time">@if($scan->created_at)<time datetime="{{ $scan->created_at->toISOString() }}">{{ $scan->created_at->timezone(config('app.timezone'))->format('d M Y · H:i') }}</time>@endif</td>
-                            <td><span class="result-chip {{ $display[1] }}">{{ $display[0] }}</span></td>
-                            <td><a class="detail-link" href="{{ route('scans.show', $scan->id) }}">Lihat →</a></td>
+                            <td>
+                                <div class="file-cell">
+                                    <span class="mini-file">FILE</span>
+                                    <span class="file-name-text" title="{{ $scan->original_filename }}">{{ $scan->original_filename }}</span>
+                                </div>
+                            </td>
+                            <td class="col-time muted" style="font-size:12.5px;white-space:nowrap">
+                                @if($scan->created_at)
+                                    <time datetime="{{ $scan->created_at->toISOString() }}">{{ $scan->created_at->timezone(config('app.timezone'))->format('d M Y · H:i') }}</time>
+                                @endif
+                            </td>
+                            <td>
+                                <span class="verdict-pill pill-{{ $display[1] }}">
+                                    <span class="pill-dot-sm"></span>{{ $display[0] }}
+                                </span>
+                            </td>
+                            <td style="text-align:right">
+                                <a class="detail-link" href="{{ route('scans.show', $scan->id) }}">Lihat →</a>
+                            </td>
                         </tr>
                     @endforeach
                     </tbody>
@@ -104,6 +165,115 @@
 </div>
 
 <style>
-.home-page{width:min(100%,960px);margin:0 auto;padding:6px 0 42px}.home-hero{display:flex;justify-content:space-between;align-items:center;gap:30px;padding:34px;margin-bottom:28px;overflow:hidden;background:linear-gradient(115deg,rgba(15,23,42,.92),rgba(32,40,57,.7))}.home-hero-copy{max-width:600px}.home-hero h1{margin:8px 0;font-size:clamp(32px,5vw,47px)}.home-hero p{margin:0;color:#a8b4c7;line-height:1.7;max-width:580px}.home-hero-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}.home-main-cta{box-shadow:0 0 20px rgba(255,103,0,.25)}.home-hero-status{display:flex;align-items:center;gap:14px;min-width:205px;padding:16px;border:1px solid rgba(16,185,129,.22);border-radius:13px;background:rgba(16,185,129,.06)}.shield-mark{display:grid;place-items:center;width:52px;height:52px;border-radius:50%;background:rgba(16,185,129,.14);border:1px solid rgba(16,185,129,.35);color:#6ee7b7;font:10px monospace;font-weight:800}.home-hero-status strong,.home-hero-status small{display:block}.home-hero-status strong{font-size:14px;margin:3px 0}.home-hero-status small{color:#91a0b4;font-size:11px}.section-row{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;margin-bottom:14px}.section-row h2{margin:5px 0 0;font-size:22px}.overview-period{font-size:12px;color:#64748b}.overview-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.overview-stat{padding:17px;border:1px solid rgba(70,130,180,.2);border-radius:12px;background:rgba(15,23,42,.72)}.overview-stat span{display:block;font:10px monospace;color:#91a0b4}.overview-stat strong{display:block;font-size:28px;margin:7px 0 3px;color:#f8fafc}.overview-stat small{font-size:11px;color:#718096}.overview-stat.safe strong{color:#10B981}.overview-stat.suspicious strong{color:#FF8A38}.overview-stat.malicious strong{color:#EF4444}.operation-strip{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin:12px 0 28px;padding:12px 15px;border:1px solid rgba(148,163,184,.12);border-radius:10px;background:rgba(11,17,32,.42);font-size:12px;color:#94a3b8}.operation-strip strong{color:#f8fafc}.operation-strip a{margin-left:auto;color:#FF8A38;text-decoration:none}.operation-dot{display:inline-block;width:7px;height:7px;margin-right:6px;border-radius:50%}.operation-dot.running{background:#fbbf24;box-shadow:0 0 8px #fbbf24}.operation-dot.incomplete{background:#ef4444}.recent-card{padding:25px}.recent-heading{margin-bottom:17px}.recent-heading p{margin:4px 0 0;font-size:13px}.home-data td{vertical-align:middle}.scan-file-name{display:flex;align-items:center;gap:9px;max-width:300px;overflow:hidden}.scan-file-name>span:last-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.mini-file{display:grid;place-items:center;flex:none;width:30px;height:30px;border-radius:6px;background:rgba(255,103,0,.12);color:#FF8A38;font:8px monospace}.scan-time{color:#91a0b4;font-size:12px!important;white-space:nowrap}.result-chip{display:inline-block;padding:5px 9px;border-radius:99px;font-size:11px;font-weight:700}.result-chip.safe{background:rgba(16,185,129,.1);color:#6ee7b7}.result-chip.suspicious{background:rgba(255,103,0,.11);color:#FF8A38}.result-chip.malicious,.result-chip.failed{background:rgba(239,68,68,.1);color:#fca5a5}.result-chip.queue,.result-chip.processing{background:rgba(251,191,36,.1);color:#fbbf24}.result-chip.unknown{background:rgba(148,163,184,.12);color:#cbd5e1}.detail-link{color:#FF8A38;text-decoration:none;font-size:12px;font-weight:600}.empty-scans{text-align:center;padding:42px 20px;border:1px dashed rgba(70,130,180,.25);border-radius:12px}.empty-scans h3{margin:12px 0 4px}.empty-scans p{margin:0 0 16px}.empty-icon{display:grid;place-items:center;width:52px;height:52px;margin:auto;border-radius:50%;background:rgba(255,103,0,.1);color:#FF8A38;font:10px monospace}@media(max-width:720px){.home-hero{align-items:flex-start;flex-direction:column;padding:25px}.overview-grid{grid-template-columns:repeat(2,1fr)}.home-hero-status{width:100%;box-sizing:border-box}.operation-strip a{margin-left:0}.recent-card{padding:18px}.scan-time{display:none}.home-data th:nth-child(2){display:none}}@media(max-width:430px){.overview-grid{gap:8px}.overview-stat{padding:13px}.overview-stat strong{font-size:23px}.section-row{align-items:flex-start;flex-direction:column}.recent-heading .btn{width:100%;text-align:center}.home-hero-actions .btn{width:100%;text-align:center}}
+.dash-wrap { display: flex; flex-direction: column; gap: 24px; }
+.welcome-card { display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; padding: 28px; }
+.welcome-copy h1 { margin: 6px 0 4px; font-size: clamp(26px, 3.6vw, 34px); }
+.welcome-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+
+.status-box {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px;
+    min-width: 225px;
+    border-radius: 10px;
+    background: #ecfdf5;
+    border: 1px solid #a7f3d0;
+}
+.shield-mark {
+    width: 46px;
+    height: 46px;
+    border-radius: 999px;
+    background: #ffffff;
+    border: 1px solid #a7f3d0;
+    color: #006948;
+    font: 700 10px 'JetBrains Mono', monospace;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+}
+.status-box strong { display: block; font-size: 14px; color: #191c1e; margin: 2px 0; }
+.status-box span { display: block; font-size: 11.5px; color: #565e74; }
+
+.section-bar { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+.period-pill { padding: 4px 10px; border-radius: 999px; background: #f2f4f6; border: 1px solid #e6e8ea; font-size: 12px; color: #565e74; }
+
+.kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+.kpi-card { background: #ffffff; border: 1px solid #e6e8ea; border-radius: 10px; padding: 18px 20px; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04); }
+.kpi-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.kpi-label { display: inline-flex; align-items: center; gap: 6px; font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600; color: #565e74; }
+.dot { width: 7px; height: 7px; border-radius: 999px; display: inline-block; }
+.dot-safe { background: #006948; }
+.dot-warn { background: #b45309; }
+.dot-danger { background: #ba1a1a; }
+
+.kpi-icon { width: 32px; height: 32px; border-radius: 7px; background: #f2f4f6; color: #565e74; display: grid; place-items: center; }
+.kpi-icon-safe { color: #006948; }
+.kpi-icon-warn { color: #b45309; }
+.kpi-icon-danger { color: #ba1a1a; }
+.kpi-num { display: block; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 32px; font-weight: 700; line-height: 1.1; color: #191c1e; margin-bottom: 4px; }
+.kpi-sub { font-size: 12px; color: #64748b; }
+
+.pipeline-bar {
+    margin-top: 12px;
+    padding: 12px 16px;
+    background: #ffffff;
+    border: 1px solid #e6e8ea;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    font-size: 12.5px;
+    color: #565e74;
+}
+.pipeline-info { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.pipeline-info strong { color: #191c1e; }
+.pipeline-link { font-weight: 600; color: #a33900; }
+.pipeline-link:hover { text-decoration: underline; }
+
+.recent-card { padding: 24px; }
+.recent-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 14px; flex-wrap: wrap; padding-bottom: 16px; margin-bottom: 16px; border-bottom: 1px solid #eceef0; }
+
+.empty-state { padding: 44px 16px; text-align: center; border: 1.5px dashed #d8dadc; border-radius: 10px; background: #f7f9fb; }
+.empty-icon { width: 52px; height: 52px; margin: 0 auto 12px; border-radius: 999px; background: #fff3ed; border: 1px solid #ffdbce; color: #a33900; font: 700 10px 'JetBrains Mono', monospace; display: grid; place-items: center; }
+.empty-state h3 { margin: 0 0 4px; font-size: 16px; }
+.empty-state p { margin: 0 0 18px; font-size: 13.5px; }
+
+.file-cell { display: flex; align-items: center; gap: 10px; max-width: 340px; }
+.mini-file { width: 32px; height: 28px; border-radius: 6px; background: #fff3ed; color: #a33900; font: 700 9px 'JetBrains Mono', monospace; display: grid; place-items: center; flex-shrink: 0; }
+.file-name-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 500; }
+.verdict-pill { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; border: 1px solid #e6e8ea; background: #f7f9fb; color: #191c1e; white-space: nowrap; }
+.pill-dot-sm { width: 6px; height: 6px; border-radius: 999px; background: #565e74; }
+.pill-safe { background: #ecfdf5; border-color: #a7f3d0; color: #006948; }
+.pill-safe .pill-dot-sm { background: #006948; }
+.pill-warn { background: #fffbeb; border-color: #fde68a; color: #b45309; }
+.pill-warn .pill-dot-sm { background: #b45309; }
+.pill-danger { background: #fef2f2; border-color: #fecaca; color: #ba1a1a; }
+.pill-danger .pill-dot-sm { background: #ba1a1a; }
+.pill-queue { background: #eff6ff; border-color: #bfdbfe; color: #1d4ed8; }
+.pill-queue .pill-dot-sm { background: #1d4ed8; }
+.detail-link { color: #a33900; font-size: 13px; font-weight: 600; white-space: nowrap; }
+.detail-link:hover { text-decoration: underline; }
+
+@media (max-width: 900px) { .kpi-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 640px) {
+    .dash-wrap { gap: 18px; }
+    .welcome-card { padding: 18px; gap: 16px; }
+    .welcome-actions { width: 100%; flex-direction: column; }
+    .welcome-actions .btn { width: 100%; }
+    .status-box { width: 100%; min-width: 0; }
+    .kpi-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .kpi-card { padding: 14px; }
+    .kpi-label { font-size: 10px; }
+    .kpi-num { font-size: 24px; }
+    .kpi-sub { font-size: 11px; }
+    .pipeline-bar { padding: 12px 14px; font-size: 12px; }
+    .recent-card { padding: 16px; }
+    .recent-head .btn { width: 100%; }
+    .file-cell { max-width: 170px; }
+    .col-time { display: none; }
+}
 </style>
 @endsection

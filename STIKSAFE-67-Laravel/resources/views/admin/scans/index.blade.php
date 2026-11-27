@@ -52,7 +52,7 @@
     @else
         <div class="table-wrap">
             <table class="data">
-                <caption style="text-align:left;padding:12px;color:#91a0b4">Daftar seluruh scan</caption>
+                <caption style="text-align:left;padding:12px;color:#565e74">Daftar seluruh scan</caption>
                 <thead>
                     <tr>
                         <th scope="col">ID</th>
@@ -81,7 +81,7 @@
                             <td>{{ $scan->status?->value ?? '—' }}</td>
                             <td>{{ $scan->result_label?->value ?? '—' }}</td>
                             <td>{{ $scan->error_code ?? '—' }}</td>
-                            <td><a style="color:#FF8A38" href="{{ route('admin.scans.show', $scan->id) }}">Detail →</a></td>
+                            <td><a style="color:#a33900" href="{{ route('admin.scans.show', $scan->id) }}">Detail →</a></td>
                         </tr>
                     @endforeach
                 </tbody>

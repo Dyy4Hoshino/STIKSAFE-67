@@ -5,15 +5,17 @@
 @if ($errors->has('delete'))
     <p class="alert" role="alert">{{ $errors->first('delete') }}</p>
 @endif
-@if (session('success'))
-    <p class="alert" role="status">{{ session('success') }}</p>
-@endif
 
-<div class="eyebrow">AUDIT LOG / PERSONAL</div>
-<h1>Riwayat scan.</h1>
-<p class="muted">Cari dan tinjau hasil pemeriksaan sebelumnya.</p>
+<div style="display:flex;justify-content:space-between;align-items:flex-end;gap:14px;flex-wrap:wrap;margin-bottom:20px">
+    <div>
+        <div class="eyebrow">RIWAYAT PRIBADI</div>
+        <h1 style="margin:4px 0">Riwayat scan.</h1>
+        <p class="muted" style="margin:0">Cari dan tinjau hasil pemeriksaan sebelumnya.</p>
+    </div>
+    <a class="btn primary" href="{{ route('scan.create') }}">+ Scan Baru</a>
+</div>
 
-<section class="panel" style="margin:22px 0">
+<section class="panel" style="margin-bottom:18px">
     <form method="get" action="{{ route('history') }}">
         <div class="form-grid">
             <div class="field">
@@ -63,11 +65,17 @@
 
 <section class="panel">
     @if ($scans->isEmpty())
-        <p class="muted">{{ request()->hasAny(['q','filter']) ? 'Tidak ada hasil untuk pencarian ini.' : 'Belum ada riwayat scan.' }}</p>
+        <div style="text-align:center;padding:42px 16px">
+            <div style="width:46px;height:46px;border-radius:10px;background:#f2f4f6;border:1px solid #e6e8ea;color:#565e74;display:grid;place-items:center;margin:0 auto 12px">
+                <span class="material-symbols-outlined" style="font-size:22px">history</span>
+            </div>
+            <h3 style="margin:0 0 4px">{{ request()->hasAny(['q','filter']) ? 'Tidak ada hasil ditemukan' : 'Belum ada riwayat scan' }}</h3>
+            <p class="muted" style="margin:0 0 16px;font-size:13.5px">{{ request()->hasAny(['q','filter']) ? 'Coba ubah atau atur ulang filter pencarian Anda.' : 'Mulai dengan memindai file atau URL pertama Anda.' }}</p>
+            <a class="btn primary" href="{{ route('scan.create') }}">+ Mulai Scan Pertama</a>
+        </div>
     @else
         <div class="table-wrap">
             <table class="data">
-                <caption style="text-align:left;padding:12px;color:#91a0b4">Daftar scan milik Anda</caption>
                 <thead>
                     <tr>
                         <th>No</th>
@@ -75,38 +83,40 @@
                         <th>Waktu upload</th>
                         <th>Status</th>
                         <th>Hasil</th>
-                        <th></th>
+                        <th style="text-align:right">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($scans as $scan)
                         <tr>
-                            <td>{{ $scans->firstItem() + $loop->index }}</td>
-                            <td>{{ $scan->original_filename }}</td>
-                            <td>
+                            <td class="tabular-nums">{{ $scans->firstItem() + $loop->index }}</td>
+                            <td style="font-weight:500">{{ $scan->original_filename }}</td>
+                            <td class="muted" style="font-size:12.5px;white-space:nowrap">
                                 @if ($scan->created_at)
                                     <time datetime="{{ $scan->created_at->toISOString() }}">{{ $scan->created_at->timezone(config('app.timezone'))->format('d M Y H:i') }}</time>
                                 @endif
                             </td>
                             <td>{{ match($scan->status?->value){'queued'=>'Antrean','processing'=>'Diproses','completed'=>'Selesai','failed'=>'Gagal','cancelled'=>'Dibatalkan','rejected'=>'Ditolak',default=>'—'} }}</td>
                             <td>{{ match($scan->result_label?->value){'safe'=>'Aman','suspicious'=>'Mencurigakan','malicious'=>'Berbahaya','unknown'=>'Tidak diketahui',default=>'—'} }}</td>
-                            <td>
-                                <a style="color:#FF8A38" href="{{ route('scans.show', $scan->id) }}">Lihat detail</a><br>
-                                <a style="color:#fca5a5" href="{{ route('confirm', ['action'=>'delete-scan','target'=>$scan->id]) }}">Hapus</a>
+                            <td style="text-align:right;white-space:nowrap">
+                                <a style="color:#a33900;font-weight:600;margin-right:10px" href="{{ route('scans.show', $scan->id) }}">Lihat detail</a>
+                                <a style="color:#ba1a1a;font-weight:500" href="{{ route('confirm', ['action'=>'delete-scan','target'=>$scan->id]) }}">Hapus</a>
                             </td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
         </div>
-        <div class="actions">
-            <span class="muted">Halaman {{ $scans->currentPage() }} dari {{ $scans->lastPage() }}</span>
-            @if (! $scans->onFirstPage())
-                <a class="btn" href="{{ $scans->previousPageUrl() }}">← Sebelumnya</a>
-            @endif
-            @if ($scans->hasMorePages())
-                <a class="btn" href="{{ $scans->nextPageUrl() }}">Berikutnya →</a>
-            @endif
+        <div class="actions" style="justify-content:space-between">
+            <span class="muted" style="font-size:12.5px">Halaman {{ $scans->currentPage() }} dari {{ $scans->lastPage() }}</span>
+            <div style="display:flex;gap:8px">
+                @if (! $scans->onFirstPage())
+                    <a class="btn" href="{{ $scans->previousPageUrl() }}">← Sebelumnya</a>
+                @endif
+                @if ($scans->hasMorePages())
+                    <a class="btn" href="{{ $scans->nextPageUrl() }}">Berikutnya →</a>
+                @endif
+            </div>
         </div>
     @endif
 </section>

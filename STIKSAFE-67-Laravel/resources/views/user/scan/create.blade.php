@@ -2,327 +2,299 @@
 @section('title', 'Scan File & URL | STIKSAFE-67')
 
 @section('content')
-<div class="scan-page">
+<div class="scan-workspace">
+    {{-- Left-Aligned Header — exact original copy --}}
     <div class="scan-header">
         <span class="eyebrow">DETECTION ENGINE / V12 STAGING</span>
         <h1>Pemeriksaan Keamanan</h1>
-        <p class="muted">Periksa potensi risiko file atau link mencurigakan secara aman tanpa perlu menjalankannya.</p>
+        <p class="muted" style="margin:0">Periksa potensi risiko file atau link mencurigakan secara aman tanpa perlu menjalankannya.</p>
     </div>
 
-    <!-- TAB SWITCHER -->
-    <div class="tab-container">
-        <button type="button" class="tab-btn active" id="tab-file-btn" onclick="switchTab('file')">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>
-            Pindai Berkas (File)
-        </button>
-        <button type="button" class="tab-btn" id="tab-url-btn" onclick="switchTab('url')">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
-            Periksa URL (Link)
-        </button>
-    </div>
-
-    <!-- PANEL 1: SCAN FILE -->
-    <div class="panel tab-content" id="content-file">
-        <div class="panel-head">
-            <div>
-                <h2>Unggah Berkas</h2>
-                <p class="muted">Analisis ciri statis PE binary & aturan format dokumen (PDF, Office, Skrip).</p>
-            </div>
-            <span class="badge-tag">Maks 25 MB</span>
-        </div>
-
-        <form method="post" action="{{ route('scan.store') }}" enctype="multipart/form-data" id="scan-form">
-            @csrf
-            <input type="hidden" name="idempotency_key" value="{{ $idempotencyKey }}">
-            
-            <label for="file" id="drop-area" class="drop-zone">
-                <input id="file" name="file" type="file" required class="file-hidden">
-                <div class="drop-icon-wrap" id="drop-icon">
-                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
-                </div>
-                <strong id="drop-title" class="drop-title">Tarik & lepaskan file di sini</strong>
-                <span class="muted drop-sub" id="file-name">atau <span style="color:#FF6700;text-decoration:underline">telusuri file dari perangkat</span></span>
-            </label>
-            @error('file')<p class="error" style="margin-top:10px">{{ $message }}</p>@enderror
-
-            <div class="scan-features-grid">
-                <div class="feature-item">
-                    <span class="feat-label">MODEL DETEKSI</span>
-                    <strong class="feat-val">EMBER2024 (PE) & Aturan</strong>
-                </div>
-                <div class="feature-item">
-                    <span class="feat-label">KEAMANAN INTAKE</span>
-                    <strong class="feat-val">Karantina Terisolasi</strong>
-                </div>
-                <div class="feature-item">
-                    <span class="feat-label">BATASAN BERKAS</span>
-                    <strong class="feat-val">Maksimum 25 MB</strong>
-                </div>
-            </div>
-
-            <div class="actions form-actions">
-                <button class="btn primary btn-submit" type="submit">
-                    Mulai Pemindaian File →
+    {{-- Asymmetric 2-Column Workspace (NOT narrow centered!) --}}
+    <div class="scan-grid">
+        <div class="scan-main-col">
+            <div class="tab-container" role="tablist">
+                <button type="button" class="tab-btn active" id="tab-file-btn" onclick="switchTab('file')">
+                    <span class="material-symbols-outlined" style="font-size:18px">upload_file</span>
+                    <span>Pindai Berkas (File)</span>
+                </button>
+                <button type="button" class="tab-btn" id="tab-url-btn" onclick="switchTab('url')">
+                    <span class="material-symbols-outlined" style="font-size:18px">link</span>
+                    <span>Periksa URL (Link)</span>
                 </button>
             </div>
-        </form>
-    </div>
 
-    <!-- PANEL 2: SCAN URL -->
-    <div class="panel tab-content" id="content-url" style="display:none">
-        <div class="panel-head">
-            <div>
-                <h2>Pemeriksaan Tautan (URL)</h2>
-                <p class="muted">Analisis struktur teks, port non-standar, host IP, dan daftar hitam reputasi.</p>
+            {{-- PANEL 1: SCAN FILE --}}
+            <div class="panel scan-card" id="content-file">
+                <div class="panel-head">
+                    <div>
+                        <h2>Unggah Berkas</h2>
+                        <p class="muted">Analisis ciri statis PE binary &amp; aturan format dokumen (PDF, Office, Skrip).</p>
+                    </div>
+                    <span class="badge-tag">Maks 25 MB</span>
+                </div>
+
+                <form method="post" action="{{ route('scan.store') }}" enctype="multipart/form-data" id="scan-form">
+                    @csrf
+                    <input type="hidden" name="idempotency_key" value="{{ $idempotencyKey }}">
+
+                    <label for="file" id="drop-area" class="drop-zone">
+                        <input id="file" name="file" type="file" required class="file-hidden">
+                        <div class="drop-icon-wrap" id="drop-icon">
+                            <span class="material-symbols-outlined" style="font-size:26px">cloud_upload</span>
+                        </div>
+                        <strong id="drop-title" class="drop-title">Tarik &amp; lepaskan file di sini</strong>
+                        <span class="muted drop-sub" id="file-name">atau <span class="drop-link">telusuri file dari perangkat</span></span>
+                    </label>
+                    @error('file')<p class="error" style="margin-top:10px">{{ $message }}</p>@enderror
+
+                    <div class="form-actions">
+                        <button class="btn primary btn-submit" type="submit">Mulai Pemindaian File →</button>
+                    </div>
+                </form>
             </div>
-            <span class="badge-tag">3 Lapis Analisis</span>
+
+            {{-- PANEL 2: SCAN URL --}}
+            <div class="panel scan-card" id="content-url" style="display:none">
+                <div class="panel-head">
+                    <div>
+                        <h2>Pemeriksaan Tautan (URL)</h2>
+                        <p class="muted">Analisis struktur teks, port non-standar, host IP, dan daftar hitam reputasi.</p>
+                    </div>
+                    <span class="badge-tag">3 Lapis Analisis</span>
+                </div>
+
+                <form method="post" action="{{ route('scan.url') }}">
+                    @csrf
+                    <div class="field" style="margin-top:4px">
+                        <label for="url">ALAMAT URL LENGKAP</label>
+                        <div class="url-input-wrap">
+                            <span class="url-prefix">URL</span>
+                            <input id="url" name="url" type="url" required placeholder="https://contoh-situs.com/halaman" value="{{ old('url') }}" class="url-input">
+                        </div>
+                    </div>
+                    @error('url')<p class="error" style="margin-top:8px">{{ $message }}</p>@enderror
+
+                    <div class="url-notice">
+                        <span class="material-symbols-outlined" style="font-size:18px;color:#006948;flex-shrink:0">info</span>
+                        <p><strong>Aman &amp; Terisolasi:</strong> Tautan <em>tidak pernah dikunjungi</em> oleh sistem. Analisis dilakukan secara statis melalui heuristik domain, IP, dan model klasifikasi URL.</p>
+                    </div>
+
+                    <div class="form-actions">
+                        <button class="btn primary btn-submit" type="submit">Analisis URL Sekarang →</button>
+                    </div>
+                </form>
+            </div>
         </div>
 
-        <form method="post" action="{{ route('scan.url') }}">
-            @csrf
-            <div class="field" style="margin-top:8px">
-                <label for="url">ALAMAT URL LENGKAP</label>
-                <div class="url-input-wrap">
-                    <span class="url-prefix">URL</span>
-                    <input id="url" name="url" type="url" required placeholder="https://contoh-situs.com/halaman" value="{{ old('url') }}" class="url-input">
+        {{-- Right Side Information Rail (Balances Desktop Viewport) --}}
+        <aside class="scan-aside-col" aria-label="Informasi pemeriksaan">
+            <div class="panel aside-card">
+                <span class="eyebrow">SPESIFIKASI PEMINDAIAN</span>
+                <div class="aside-specs">
+                    <div class="aside-spec-item">
+                        <span class="aside-spec-icon"><span class="material-symbols-outlined" style="font-size:18px">memory</span></span>
+                        <div>
+                            <span class="feat-label">MODEL DETEKSI</span>
+                            <strong class="feat-val">EMBER2024 (PE) &amp; Aturan</strong>
+                        </div>
+                    </div>
+                    <div class="aside-spec-item">
+                        <span class="aside-spec-icon aside-icon-safe"><span class="material-symbols-outlined" style="font-size:18px">lock</span></span>
+                        <div>
+                            <span class="feat-label">KEAMANAN INTAKE</span>
+                            <strong class="feat-val">Karantina Terisolasi</strong>
+                        </div>
+                    </div>
+                    <div class="aside-spec-item">
+                        <span class="aside-spec-icon"><span class="material-symbols-outlined" style="font-size:18px">hard_drive</span></span>
+                        <div>
+                            <span class="feat-label">BATASAN BERKAS</span>
+                            <strong class="feat-val">Maksimum 25 MB</strong>
+                        </div>
+                    </div>
                 </div>
             </div>
-            @error('url')<p class="error" style="margin-top:8px">{{ $message }}</p>@enderror
 
-            <div class="url-notice">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6ee7b7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-                <p style="margin:0;font-size:12.5px;color:#cbd5e1;line-height:1.5">
-                    <strong>Aman & Terisolasi:</strong> Tautan <em>tidak pernah dikunjungi</em> oleh sistem. Analisis dilakukan secara statis melalui heuristik domain, IP, dan model klasifikasi URL.
-                </p>
+            <div class="panel aside-card">
+                <span class="eyebrow">FORMAT YANG DIDUKUNG</span>
+                <div class="format-list">
+                    <div class="format-group">
+                        <small>Model ML</small>
+                        <div class="chip-wrap">
+                            <span>.EXE</span><span>.DLL</span>
+                        </div>
+                    </div>
+                    <div class="format-group">
+                        <small>Pemeriksa Aturan</small>
+                        <div class="chip-wrap">
+                            <span>PDF</span><span>DOCX / XLSX / PPTX</span><span>ZIP</span><span>JPG / PNG / GIF</span><span>RTF / LNK</span><span>Skrip &amp; SVG</span>
+                        </div>
+                    </div>
+                </div>
             </div>
-
-            <div class="actions form-actions">
-                <button class="btn primary btn-submit" type="submit">
-                    Analisis URL Sekarang →
-                </button>
-            </div>
-        </form>
+        </aside>
     </div>
 </div>
 
 <style>
-    .scan-page {
-        width: min(100%, 760px);
-        margin: 0 auto;
-        padding: 6px 0 40px;
-    }
-    .scan-header {
-        text-align: center;
-        margin-bottom: 26px;
-    }
-    .scan-header h1 {
-        margin: 8px 0 6px;
-    }
-    .scan-header p {
-        margin: 0;
-        font-size: 14px;
-    }
+.scan-workspace { width: 100%; }
+.scan-header { margin-bottom: 24px; }
+.scan-header h1 { margin: 6px 0 4px; }
 
-    /* TAB SELECTOR */
-    .tab-container {
-        display: flex;
-        gap: 10px;
-        margin-bottom: 20px;
-        background: rgba(15, 23, 42, 0.6);
-        padding: 6px;
-        border-radius: 12px;
-        border: 1px solid rgba(148, 163, 184, 0.14);
-    }
-    .tab-btn {
-        flex: 1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        padding: 12px 18px;
-        border: none;
-        border-radius: 8px;
-        background: transparent;
-        color: #94a3b8;
-        font-family: inherit;
-        font-size: 13.5px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.2s;
-    }
-    .tab-btn:hover {
-        color: #f8fafc;
-        background: rgba(255, 255, 255, 0.04);
-    }
-    .tab-btn.active {
-        background: #FF6700;
-        color: #111827;
-        box-shadow: 0 4px 14px rgba(255, 103, 0, 0.25);
-    }
+.scan-grid {
+    display: grid;
+    grid-template-columns: 1.45fr 0.85fr;
+    gap: 22px;
+    align-items: start;
+}
 
-    /* CARD & HEAD */
-    .panel-head {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        gap: 14px;
-        margin-bottom: 22px;
-        border-bottom: 1px solid rgba(148, 163, 184, 0.12);
-        padding-bottom: 16px;
-    }
-    .panel-head h2 {
-        margin: 0 0 4px;
-        font-size: 20px;
-    }
-    .panel-head p {
-        margin: 0;
-        font-size: 13px;
-    }
-    .badge-tag {
-        font-size: 11px;
-        font-weight: 700;
-        font-family: 'JetBrains Mono', monospace;
-        color: #FF8A38;
-        background: rgba(255, 103, 0, 0.1);
-        border: 1px solid rgba(255, 103, 0, 0.25);
-        padding: 4px 10px;
-        border-radius: 20px;
-        white-space: nowrap;
-    }
+.tab-container {
+    display: flex;
+    gap: 6px;
+    padding: 4px;
+    margin-bottom: 16px;
+    border-radius: 10px;
+    background: #eceef0;
+}
+.tab-btn {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border: none;
+    border-radius: 7px;
+    background: transparent;
+    color: #565e74;
+    font-family: inherit;
+    font-size: 13.5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+.tab-btn:hover { color: #191c1e; }
+.tab-btn.active {
+    background: #ffffff;
+    color: #191c1e;
+    font-weight: 600;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+}
+.tab-btn.active .material-symbols-outlined { color: #a33900; }
 
-    /* DROP ZONE */
-    .drop-zone {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        min-height: 220px;
-        padding: 32px 20px;
-        text-align: center;
-        border: 2px dashed rgba(70, 130, 180, 0.45);
-        border-radius: 14px;
-        background: rgba(11, 17, 32, 0.55);
-        cursor: pointer;
-        transition: all 0.25s ease;
-    }
-    .drop-zone:hover, .drop-zone.dragover {
-        border-color: #FF6700;
-        background: rgba(255, 103, 0, 0.06);
-    }
-    .file-hidden {
-        display: none;
-    }
-    .drop-icon-wrap {
-        width: 60px;
-        height: 60px;
-        border-radius: 50%;
-        background: rgba(255, 103, 0, 0.12);
-        color: #FF6700;
-        display: grid;
-        place-items: center;
-        margin-bottom: 14px;
-        transition: transform 0.2s ease;
-    }
-    .drop-zone:hover .drop-icon-wrap {
-        transform: translateY(-3px);
-    }
-    .drop-title {
-        font-size: 16px;
-        color: #f8fafc;
-        margin-bottom: 6px;
-    }
-    .drop-sub {
-        font-size: 13px;
-    }
+.scan-card { padding: 26px; }
+.panel-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #eceef0;
+}
+.panel-head h2 { margin: 0 0 4px; font-size: 19px; }
+.panel-head p { margin: 0; font-size: 13px; }
+.badge-tag {
+    font-size: 11px;
+    font-weight: 600;
+    font-family: 'JetBrains Mono', monospace;
+    color: #a33900;
+    background: #fff3ed;
+    border: 1px solid #ffdbce;
+    padding: 4px 10px;
+    border-radius: 999px;
+    white-space: nowrap;
+}
 
-    /* FEATURES GRID */
-    .scan-features-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 12px;
-        margin: 22px 0 16px;
-    }
-    .feature-item {
-        background: rgba(11, 17, 32, 0.7);
-        border: 1px solid rgba(148, 163, 184, 0.12);
-        padding: 12px 14px;
-        border-radius: 10px;
-    }
-    .feat-label {
-        display: block;
-        font-size: 10.5px;
-        font-family: 'JetBrains Mono', monospace;
-        color: #91a0b4;
-        margin-bottom: 4px;
-    }
-    .feat-val {
-        font-size: 12.5px;
-        color: #f8fafc;
-        font-weight: 600;
-    }
+.drop-zone {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 220px;
+    padding: 32px 20px;
+    text-align: center;
+    border: 1.5px dashed #cbd5e1;
+    border-radius: 10px;
+    background: #f7f9fb;
+    cursor: pointer;
+    transition: border-color 0.15s, background-color 0.15s;
+}
+.drop-zone:hover, .drop-zone.dragover { border-color: #a33900; background: #fff9f6; }
+.drop-zone.selected { border-color: #006948; border-style: solid; background: #ecfdf5; }
+.file-hidden { display: none; }
+.drop-icon-wrap {
+    width: 52px;
+    height: 52px;
+    border-radius: 12px;
+    background: #ffffff;
+    border: 1px solid #e6e8ea;
+    color: #a33900;
+    display: grid;
+    place-items: center;
+    margin-bottom: 14px;
+}
+.drop-title { font-size: 15.5px; color: #191c1e; margin-bottom: 5px; }
+.drop-sub { font-size: 13px; }
+.drop-link { color: #a33900; font-weight: 600; text-decoration: underline; }
 
-    /* URL INPUT */
-    .url-input-wrap {
-        display: flex;
-        align-items: stretch;
-        margin-top: 4px;
-        border: 1px solid rgba(70, 130, 180, 0.35);
-        border-radius: 8px;
-        overflow: hidden;
-        background: #0b1120;
-    }
-    .url-prefix {
-        display: flex;
-        align-items: center;
-        padding: 0 14px;
-        background: rgba(15, 23, 42, 0.85);
-        border-right: 1px solid rgba(70, 130, 180, 0.25);
-        color: #91a0b4;
-        font-size: 12px;
-        font-weight: 700;
-        font-family: 'JetBrains Mono', monospace;
-    }
-    .url-input {
-        flex: 1;
-        border: none !important;
-        border-radius: 0 !important;
-        padding: 12px 14px !important;
-        font-size: 13.5px !important;
-    }
-    .url-notice {
-        display: flex;
-        gap: 12px;
-        align-items: flex-start;
-        margin-top: 18px;
-        padding: 14px 16px;
-        background: rgba(16, 185, 129, 0.06);
-        border: 1px solid rgba(16, 185, 129, 0.2);
-        border-radius: 10px;
-    }
+.url-input-wrap {
+    display: flex;
+    align-items: stretch;
+    border: 1px solid #d8dadc;
+    border-radius: 7px;
+    overflow: hidden;
+    background: #ffffff;
+}
+.url-input-wrap:focus-within { border-color: #a33900; box-shadow: 0 0 0 3px rgba(163, 57, 0, 0.1); }
+.url-prefix {
+    display: flex;
+    align-items: center;
+    padding: 0 14px;
+    background: #f2f4f6;
+    border-right: 1px solid #e6e8ea;
+    color: #565e74;
+    font: 700 11.5px 'JetBrains Mono', monospace;
+}
+.url-input { flex: 1; border: none !important; box-shadow: none !important; border-radius: 0 !important; padding: 11px 14px !important; font-family: 'JetBrains Mono', monospace !important; font-size: 13px !important; }
+.url-notice {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    margin-top: 16px;
+    padding: 13px 15px;
+    background: #ecfdf5;
+    border: 1px solid #a7f3d0;
+    border-radius: 8px;
+}
+.url-notice p { margin: 0; font-size: 12.5px; color: #005137; line-height: 1.55; }
 
-    /* ACTIONS */
-    .form-actions {
-        margin-top: 24px;
-        padding-top: 18px;
-        border-top: 1px solid rgba(148, 163, 184, 0.12);
-    }
-    .btn-submit {
-        width: 100%;
-        padding: 13px;
-        font-size: 14px;
-        font-weight: 700;
-        text-align: center;
-    }
+.form-actions { margin-top: 22px; padding-top: 18px; border-top: 1px solid #eceef0; }
+.btn-submit { width: 100%; padding: 12px 18px; font-size: 14px; }
 
-    @media (max-width: 600px) {
-        .scan-features-grid {
-            grid-template-columns: 1fr;
-        }
-        .tab-btn {
-            font-size: 12px;
-            padding: 10px;
-        }
-    }
+/* Right Rail */
+.scan-aside-col { display: flex; flex-direction: column; gap: 16px; }
+.aside-card { padding: 20px; }
+.aside-specs { display: grid; gap: 14px; margin-top: 14px; }
+.aside-spec-item { display: flex; align-items: center; gap: 12px; }
+.aside-spec-icon { width: 34px; height: 34px; border-radius: 8px; background: #f2f4f6; color: #a33900; display: grid; place-items: center; flex-shrink: 0; }
+.aside-icon-safe { color: #006948; }
+.feat-label { display: block; font: 600 10px 'JetBrains Mono', monospace; color: #565e74; }
+.feat-val { font-size: 13px; color: #191c1e; font-weight: 600; }
+
+.format-list { display: grid; gap: 14px; margin-top: 14px; }
+.format-group small { display: block; font-size: 12px; font-weight: 600; color: #565e74; margin-bottom: 6px; }
+.chip-wrap { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip-wrap span { padding: 3px 8px; border-radius: 5px; background: #f2f4f6; border: 1px solid #e6e8ea; font: 500 11px 'JetBrains Mono', monospace; color: #191c1e; }
+
+@media (max-width: 900px) {
+    .scan-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+    .scan-card { padding: 18px; }
+    .tab-btn { font-size: 12.5px; padding: 9px 10px; }
+}
 </style>
 
 <script>
@@ -345,7 +317,7 @@ function switchTab(type) {
     }
 }
 
-(function() {
+(() => {
     const dropArea = document.getElementById('drop-area');
     const fileInput = document.getElementById('file');
     const fileName = document.getElementById('file-name');
@@ -357,41 +329,37 @@ function switchTab(type) {
             const sizeMB = (file.size / 1024 / 1024).toFixed(2);
             dropTitle.textContent = file.name;
             fileName.textContent = 'Ukuran: ' + sizeMB + ' MB · Klik untuk ganti file';
-            dropArea.style.borderColor = '#10B981';
-            dropArea.style.background = 'rgba(16, 185, 129, 0.07)';
-            dropIcon.innerHTML = '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
-            dropIcon.style.background = 'rgba(16, 185, 129, 0.15)';
+            dropArea.classList.add('selected');
+            dropIcon.innerHTML = '<span class="material-symbols-outlined" style="font-size:26px;color:#006948">check_circle</span>';
         } else {
             dropTitle.textContent = 'Tarik & lepaskan file di sini';
-            fileName.innerHTML = 'atau <span style="color:#FF6700;text-decoration:underline">telusuri file dari perangkat</span>';
-            dropArea.style.borderColor = 'rgba(70, 130, 180, 0.45)';
-            dropArea.style.background = 'rgba(11, 17, 32, 0.55)';
-            dropIcon.innerHTML = '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>';
-            dropIcon.style.background = 'rgba(255, 103, 0, 0.12)';
+            fileName.innerHTML = 'atau <span class="drop-link">telusuri file dari perangkat</span>';
+            dropArea.classList.remove('selected');
+            dropIcon.innerHTML = '<span class="material-symbols-outlined" style="font-size:26px">cloud_upload</span>';
         }
     }
 
-    fileInput.addEventListener('change', function() {
+    fileInput.addEventListener('change', function () {
         updateLabel(this.files[0] || null);
     });
 
-    ['dragenter', 'dragover'].forEach(function(evt) {
-        dropArea.addEventListener(evt, function(e) {
+    ['dragenter', 'dragover'].forEach((evt) => {
+        dropArea.addEventListener(evt, (e) => {
             e.preventDefault();
             e.stopPropagation();
             dropArea.classList.add('dragover');
         });
     });
 
-    ['dragleave', 'drop'].forEach(function(evt) {
-        dropArea.addEventListener(evt, function(e) {
+    ['dragleave', 'drop'].forEach((evt) => {
+        dropArea.addEventListener(evt, (e) => {
             e.preventDefault();
             e.stopPropagation();
             dropArea.classList.remove('dragover');
         });
     });
 
-    dropArea.addEventListener('drop', function(e) {
+    dropArea.addEventListener('drop', (e) => {
         const dt = e.dataTransfer;
         if (dt.files.length) {
             fileInput.files = dt.files;
@@ -399,6 +367,10 @@ function switchTab(type) {
         }
     });
 
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('tab') === 'url') {
+        switchTab('url');
+    }
     @if($errors->has('url'))
         switchTab('url');
     @endif

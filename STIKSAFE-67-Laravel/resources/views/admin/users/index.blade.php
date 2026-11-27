@@ -40,8 +40,8 @@
             <tr>
                 <td><strong>{{ $usr->name }}</strong></td>
                 <td>{{ $usr->email }}</td>
-                <td><span style="color:{{ $usr->role==='admin'?'#FF6700':'#38bdf8' }}">{{ ucfirst($usr->role) }}</span></td>
-                <td><span style="color:{{ $usr->status==='active'?'#10b981':($usr->status==='suspended'?'#ef4444':'#94a3b8') }}">{{ ucfirst($usr->status) }}</span></td>
+                <td><span style="color:{{ $usr->role==='admin'?'#a33900':'#0369a1' }}">{{ ucfirst($usr->role) }}</span></td>
+                <td><span style="color:{{ $usr->status==='active'?'#006948':($usr->status==='suspended'?'#ba1a1a':'#94a3b8') }}">{{ ucfirst($usr->status) }}</span></td>
                 <td>{{ $usr->email_verified_at ? 'Sudah (' . $usr->email_verified_at->timezone(config('app.timezone'))->format('d M Y') . ')' : 'Belum' }}</td>
                 <td>{{ $usr->created_at?->format('d M Y') }}</td>
                 <td><a class="btn" href="{{ route('admin.users.show', $usr->id) }}">Detail</a></td>

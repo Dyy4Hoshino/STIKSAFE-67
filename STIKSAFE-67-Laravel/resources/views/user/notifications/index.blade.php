@@ -34,11 +34,11 @@
                                 <time class="muted" datetime="{{ $notification->created_at->toISOString() }}" style="display:block;margin-top:8px;font:11px 'JetBrains Mono',monospace">{{ $notification->created_at->timezone(config('app.timezone'))->format('d M Y H:i T') }}</time>
                             @endif
                             @if ($scanId)
-                                <a style="display:inline-block;margin-top:10px;color:#FF8A38" href="{{ route('scans.show', $scanId) }}">Lihat scan →</a>
+                                <a style="display:inline-block;margin-top:10px;color:#a33900" href="{{ route('scans.show', $scanId) }}">Lihat scan →</a>
                             @endif
                         </div>
                         <div style="text-align:right;white-space:nowrap">
-                            <span class="eyebrow" style="color:{{ $notification->read_at ? '#91a0b4' : '#6ee7b7' }}">{{ $notification->read_at ? 'SUDAH DIBACA' : 'BELUM DIBACA' }}</span>
+                            <span class="eyebrow" style="color:{{ $notification->read_at ? '#565e74' : '#006948' }}">{{ $notification->read_at ? 'SUDAH DIBACA' : 'BELUM DIBACA' }}</span>
                             @if (! $notification->read_at)
                                 <form method="post" action="{{ route('notifications.read', $notification->id) }}" style="margin-top:10px">
                                     @csrf

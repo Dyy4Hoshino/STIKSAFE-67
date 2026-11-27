@@ -4,11 +4,40 @@ namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Models\Scan;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Illuminate\View\View;
 
 class DashboardController extends Controller
 {
+    public function mlStatus(): JsonResponse
+    {
+        $baseUrl = rtrim((string) config('services.ml.base_url', 'http://127.0.0.1:8001'), '/');
+        $token = (string) config('services.ml.service_token', '');
+
+        try {
+            $request = Http::connectTimeout(1)->timeout(2);
+            if ($token !== '') {
+                $request = $request->withToken($token);
+            }
+
+            $response = $request->get("{$baseUrl}/v1/health");
+            $body = $response->json();
+            $online = $response->successful() && is_array($body) && (($body['status'] ?? null) === 'ready');
+
+            return response()->json([
+                'online' => $online,
+                'status' => $online ? 'ready' : ($body['status'] ?? 'not_ready'),
+            ])->header('Cache-Control', 'no-store, no-cache, must-revalidate');
+        } catch (\Throwable) {
+            return response()->json([
+                'online' => false,
+                'status' => 'offline',
+            ])->header('Cache-Control', 'no-store, no-cache, must-revalidate');
+        }
+    }
+
     public function landingOrDashboard(Request $request)
     {
         if ($request->user()) {

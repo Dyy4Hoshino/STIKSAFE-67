@@ -5,11 +5,11 @@
 <div style="max-width:590px;margin:35px auto">
     <section class="panel">
         <span class="eyebrow">ACCOUNT SECURITY / VERIFICATION</span>
-        <h1>Verifikasi<br><span style="color:#FF6700">email Anda.</span></h1>
+        <h1>Verifikasi<br><span style="color:#a33900">email Anda.</span></h1>
         <p class="muted">Kami sudah mengirim tautan verifikasi ke alamat email Anda. Buka email tersebut untuk melanjutkan ke dashboard STIKSAFE.</p>
 
         @if (session('status'))
-            <p class="alert" role="status" style="border-color:#10b98166;background:#10b98111;color:#6ee7b7">{{ session('status') }}</p>
+            <p class="alert" role="status" style="border-color:#a7f3d0;background:#ecfdf5;color:#005137">{{ session('status') }}</p>
         @endif
 
         @if ($errors->any())
