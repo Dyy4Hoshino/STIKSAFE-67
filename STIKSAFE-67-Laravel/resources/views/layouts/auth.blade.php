@@ -263,8 +263,26 @@
             transition: background-color 0.15s, border-color 0.15s;
         }
         .btn:hover { background: #f2f4f6; border-color: #cbd5e1; }
-        .btn.primary { background: #a33900; border-color: #a33900; color: #ffffff; font-weight: 600; }
-        .btn.primary:hover { background: #cc4900; border-color: #cc4900; }
+        .btn.primary { background: #f97316; border-color: #f97316; color: #ffffff; font-weight: 600; }
+        .btn.primary:hover { background: #ea580c; border-color: #ea580c; }
+        .password-control { position:relative; }
+        .password-control input { width:100%; box-sizing:border-box; padding-right:46px; }
+        .password-toggle { position:absolute; right:8px; bottom:7px; width:32px; height:32px; display:grid; place-items:center; padding:0; border:0; border-radius:6px; background:transparent; color:#64748b; cursor:pointer; }
+        .password-toggle:hover { background:#eaf0f7; color:#f97316; }
+        .password-toggle .material-symbols-outlined { font-size:19px; }
+
+        body.dark-mode { background:#0b0f17; color:#f1f5f9; }
+        body.dark-mode .auth-aside { background:#0e1726; }
+        body.dark-mode .auth-main { background-color:#0b0f17; background-image:radial-gradient(circle at 85% 0%,rgba(30,144,255,.12),transparent 45%),radial-gradient(rgba(30,144,255,.08) 1px,transparent 1px),linear-gradient(to right,rgba(255,255,255,.02) 1px,transparent 1px),linear-gradient(to bottom,rgba(255,255,255,.02) 1px,transparent 1px); }
+        body.dark-mode .auth-back { color:#cbd5e1; }
+        body.dark-mode .auth-back:hover { background:#1e293b; color:#fff; }
+        body.dark-mode .auth-form-box h1 { color:#f8fafc; }
+        body.dark-mode .eyebrow, body.dark-mode .auth-form-box h1 span { color:#ff7b00; }
+        body.dark-mode .muted, body.dark-mode .field label, body.dark-mode .field small { color:#94a3b8; }
+        body.dark-mode .field input { background:#101722; border-color:#2a384e; color:#f8fafc; }
+        body.dark-mode .field input:focus { background:#101722; border-color:#ff7b00; box-shadow:0 0 0 3px rgba(249,115,22,.18); }
+        body.dark-mode .btn:not(.primary) { background:#1e293b; border-color:#334155; color:#f1f5f9; }
+        body.dark-mode .password-toggle:hover { background:#1e293b; color:#ff7b00; }
 
         @media (max-width: 960px) {
             .auth-shell { grid-template-columns: 1fr; }
@@ -277,6 +295,9 @@
     </style>
 </head>
 <body>
+<script>
+    if (localStorage.getItem('stiksafe_theme') === 'dark') document.body.classList.add('dark-mode');
+</script>
     <div class="auth-shell">
         <aside class="auth-aside" aria-label="Informasi STIKSAFE-67">
             <div class="auth-aside-dots" aria-hidden="true"></div>
@@ -337,5 +358,17 @@
             </div>
         </main>
     </div>
+    <script>
+        document.querySelectorAll('[data-password-toggle]').forEach((button) => {
+            button.addEventListener('click', () => {
+                const input = document.getElementById(button.dataset.passwordToggle);
+                if (!input) return;
+                const show = input.type === 'password';
+                input.type = show ? 'text' : 'password';
+                button.setAttribute('aria-label', show ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi');
+                button.querySelector('.material-symbols-outlined').textContent = show ? 'visibility_off' : 'visibility';
+            });
+        });
+    </script>
 </body>
 </html>

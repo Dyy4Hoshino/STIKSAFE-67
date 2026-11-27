@@ -10,9 +10,15 @@
     <section class="panel">
         <h3 style="margin:0 0 6px">Status Layanan ML</h3>
         <p class="muted" style="margin:0 0 14px;font-size:13px">Koneksi ke ML Service (<code>{{ config('services.ml.base_url', 'Belum diset') }}</code>)</p>
-        <div style="padding:14px 16px;border-radius:8px;background:{{ $mlStatus['available'] ? '#ecfdf5' : '#fef2f2' }};border:1px solid {{ $mlStatus['available'] ? '#a7f3d0' : '#fecaca' }};color:{{ $mlStatus['available'] ? '#005137' : '#93000a' }}">
-            <strong>{{ $mlStatus['available'] ? '● ONLINE' : '✕ OFFLINE / GAGAL' }}</strong>
-            <p style="margin:6px 0 0;font-size:13px">{{ $mlStatus['message'] }}</p>
+        <div class="ml-status-badge {{ $mlStatus['available'] ? 'online' : 'offline' }}">
+            <div style="display:flex;align-items:center;gap:8px">
+                <span class="status-indicator"></span>
+                <strong>{{ $mlStatus['available'] ? 'ONLINE — Layanan Aktif' : 'OFFLINE — Fallback Aktif' }}</strong>
+            </div>
+            <p style="margin:8px 0 0;font-size:13px">{{ $mlStatus['message'] }}</p>
+            @if(!$mlStatus['available'])
+                <small style="display:block;margin-top:6px;opacity:0.85">Sistem secara otomatis beralih ke <em>Offline Fallback Engine</em> agar scan tetap berfungsi normal.</small>
+            @endif
         </div>
     </section>
 

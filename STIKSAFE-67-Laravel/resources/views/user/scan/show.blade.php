@@ -9,7 +9,7 @@
         'safe' => 'Aman',
         'suspicious' => 'Mencurigakan',
         'malicious' => 'Berbahaya',
-        'unknown' => 'Tidak diketahui',
+        'unknown' => 'Indikasi netral',
         default => '—',
     };
     $labelTone = match ($label) {

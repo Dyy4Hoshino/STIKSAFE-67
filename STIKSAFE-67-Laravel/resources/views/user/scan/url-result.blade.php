@@ -7,7 +7,7 @@
     $urlLabelText = match ($urlLabel) {
         'malicious' => 'Berbahaya',
         'suspicious' => 'Mencurigakan',
-        default => 'Tidak diketahui',
+        default => 'Indikasi netral',
     };
     $urlTone = match ($urlLabel) {
         'malicious' => ['color' => '#ba1a1a', 'bg' => '#fef2f2', 'border' => '#fecaca'],

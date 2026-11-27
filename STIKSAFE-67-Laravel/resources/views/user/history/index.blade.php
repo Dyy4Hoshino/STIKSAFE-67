@@ -35,7 +35,7 @@
                 <label for="filter-result">HASIL</label>
                 <select id="filter-result" name="filter[result]">
                     <option value="">Semua hasil</option>
-                    @foreach(['safe'=>'Aman','suspicious'=>'Mencurigakan','malicious'=>'Berbahaya','unknown'=>'Tidak diketahui'] as $value=>$label)
+                    @foreach(['safe'=>'Aman','suspicious'=>'Mencurigakan','malicious'=>'Berbahaya','unknown'=>'Indikasi netral'] as $value=>$label)
                         <option value="{{ $value }}" @selected(request('filter.result')===$value)>{{ $label }}</option>
                     @endforeach
                 </select>
@@ -97,7 +97,7 @@
                                 @endif
                             </td>
                             <td>{{ match($scan->status?->value){'queued'=>'Antrean','processing'=>'Diproses','completed'=>'Selesai','failed'=>'Gagal','cancelled'=>'Dibatalkan','rejected'=>'Ditolak',default=>'—'} }}</td>
-                            <td>{{ match($scan->result_label?->value){'safe'=>'Aman','suspicious'=>'Mencurigakan','malicious'=>'Berbahaya','unknown'=>'Tidak diketahui',default=>'—'} }}</td>
+                            <td>{{ match($scan->result_label?->value){'safe'=>'Aman','suspicious'=>'Mencurigakan','malicious'=>'Berbahaya','unknown'=>'Indikasi netral',default=>'—'} }}</td>
                             <td style="text-align:right;white-space:nowrap">
                                 <a style="color:#a33900;font-weight:600;margin-right:10px" href="{{ route('scans.show', $scan->id) }}">Lihat detail</a>
                                 <a style="color:#ba1a1a;font-weight:500" href="{{ route('confirm', ['action'=>'delete-scan','target'=>$scan->id]) }}">Hapus</a>

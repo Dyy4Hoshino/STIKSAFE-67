@@ -62,14 +62,14 @@
             padding: 3px;
         }
         .brand-name { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 17px; font-weight: 800; letter-spacing: 0.04em; color: #191c1e; }
-        .brand-name span { color: #a33900; }
+        .brand-name span { color: #f97316; }
         .brand-caption { display: block; color: #565e74; font: 500 10px 'JetBrains Mono', monospace; letter-spacing: 0.1em; line-height: 1.35; }
         .school-group { display: flex; align-items: center; gap: 10px; margin-left: 14px; padding-left: 16px; border-left: 1px solid #e6e8ea; }
         .school-logo { width: 30px; height: 34px; object-fit: contain; }
 
         nav { display: flex; align-items: center; gap: 20px; color: #565e74; font-size: 13.5px; font-weight: 500; }
         nav a { display: inline-flex; align-items: center; gap: 6px; }
-        nav a:hover { color: #a33900; }
+        nav a:hover { color: #f97316; }
         .nav-icon { width: 15px; height: 15px; flex-shrink: 0; stroke-width: 1.9; }
 
         /* Mobile Bottom Navbar for Landing Page */
@@ -122,7 +122,7 @@
         }
         .landing-bottom-tab svg { width: 19px; height: 19px; stroke-width: 1.9; }
         .landing-bottom-tab.active,
-        .landing-bottom-tab.cta { color: #a33900; font-weight: 700; }
+        .landing-bottom-tab.cta { color: #f97316; font-weight: 700; }
         .landing-bottom-tab.active::before {
             content: '';
             position: absolute;
@@ -131,7 +131,7 @@
             right: 22%;
             height: 2.5px;
             border-radius: 0 0 4px 4px;
-            background: #a33900;
+            background: #f97316;
         }
 
         .button {
@@ -149,8 +149,8 @@
             transition: background-color 0.15s, border-color 0.15s;
         }
         .button:hover { background: #f2f4f6; border-color: #cbd5e1; color: #191c1e; }
-        .button.primary { background: #a33900; border-color: #a33900; color: #ffffff; }
-        .button.primary:hover { background: #cc4900; border-color: #cc4900; color: #ffffff; }
+        .button.primary { background: #f97316; border-color: #f97316; color: #ffffff; }
+        .button.primary:hover { background: #ea580c; border-color: #ea580c; color: #ffffff; }
 
         /* Asymmetric 2-Column Editorial Hero (LEFT-ALIGNED, NOT CENTERED) */
         .hero-band {
@@ -184,7 +184,7 @@
             letter-spacing: -0.035em;
             color: #191c1e;
         }
-        h1 span { color: #a33900; }
+        h1 span { color: #f97316; }
         .intro {
             max-width: 560px;
             margin: 0;
@@ -323,7 +323,7 @@
             padding: 3px 8px;
             border-radius: 5px;
             background: #fff3ed;
-            color: #a33900;
+            color: #f97316;
             font: 600 11px 'JetBrains Mono', monospace;
             letter-spacing: 0.04em;
         }
@@ -387,6 +387,32 @@
             .landing-bottom-nav { display: block !important; }
             footer { margin-bottom: 66px; }
         }
+        /* Public landing dark mode */
+        body.dark-mode {
+            background-color: #0b0f17 !important;
+            background-image: radial-gradient(circle at 10% 0%, rgba(30,144,255,.12), transparent 42%), radial-gradient(circle at 90% 8%, rgba(255,106,0,.1), transparent 40%), radial-gradient(rgba(30,144,255,.08) 1px, transparent 1px), linear-gradient(to right, rgba(255,255,255,.02) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,.02) 1px, transparent 1px) !important;
+            color: #f1f5f9;
+        }
+        body.dark-mode .landing-header,
+        body.dark-mode footer { background: rgba(15,23,42,.94) !important; border-color: #243247 !important; color: #cbd5e1; }
+        body.dark-mode .brand-name, body.dark-mode h1, body.dark-mode .section-heading, body.dark-mode .feature h3 { color: #f8fafc !important; }
+        body.dark-mode .brand-caption, body.dark-mode nav, body.dark-mode .intro, body.dark-mode .section-copy, body.dark-mode .feature p, body.dark-mode .about-strip p, body.dark-mode footer { color: #94a3b8 !important; }
+        body.dark-mode .brand-name span, body.dark-mode h1 span, body.dark-mode nav a:hover { color: #ff7b00 !important; }
+        body.dark-mode .hero-band { background: transparent !important; border-color: #243247 !important; }
+        body.dark-mode .button:not(.primary), body.dark-mode .landing-theme-toggle { background: #1e293b !important; border-color: #334155 !important; color: #f1f5f9 !important; }
+        body.dark-mode .button.primary { background: #ff6a00 !important; border-color: #ff6a00 !important; }
+        body.dark-mode .feature, body.dark-mode .about-strip { background: #131924 !important; border-color: #243247 !important; box-shadow: 0 5px 18px rgba(0,0,0,.25); }
+        body.dark-mode .feature-mark { background: #2a1b12 !important; color: #ff9a3d !important; }
+        body.dark-mode .visual-card { background: #131924 !important; border-color: #2a384e !important; box-shadow: 0 8px 24px rgba(0,0,0,.35); }
+        body.dark-mode .visual-stage { background: radial-gradient(circle at 50% 50%, rgba(30,41,59,.95), rgba(15,23,42,.5) 68%, transparent 100%); }
+        body.dark-mode .visual-label { background: #111722 !important; border-color: #2a384e !important; color: #94a3b8 !important; }
+        body.dark-mode .radar-logo-core { background: #f8fafc; }
+        body.dark-mode .landing-bottom-nav { background: rgba(15,23,42,.97); border-color: #243247; }
+        body.dark-mode .landing-bottom-tab { color: #94a3b8; }
+        body.dark-mode .landing-bottom-tab.active, body.dark-mode .landing-bottom-tab.cta { color: #ff7b00; }
+        .landing-theme-toggle { display:inline-flex; align-items:center; gap:6px; padding:7px 10px; border:1px solid #d8dadc; border-radius:7px; background:#fff; color:#191c1e; cursor:pointer; font:600 12px inherit; }
+        .landing-theme-toggle .material-symbols-outlined { font-size:16px; }
+
         @media (max-width: 520px) {
             .site-shell { width: calc(100% - 24px); }
             .topbar { min-height: 58px; }
@@ -441,6 +467,7 @@
                     <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" x2="3" y1="12" y2="12"/></svg>
                     <span>Masuk</span>
                 </a>
+                <button class="landing-theme-toggle" id="landing-theme-toggle" type="button" aria-label="Ganti tema"><span class="material-symbols-outlined" id="landing-theme-icon">dark_mode</span></button>
                 <a class="button primary" href="{{ route('register') }}" style="padding:8px 14px;font-size:13px">
                     <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><circle cx="12" cy="12" r="3"/></svg>
                     <span>Mulai scan <span aria-hidden="true">↗</span></span>
@@ -796,6 +823,22 @@
             window.addEventListener('hashchange', syncByScroll);
             window.addEventListener('scroll', syncByScroll, { passive: true });
             syncByScroll();
+        })();
+
+        (() => {
+            const key = 'stiksafe_theme';
+            const toggle = document.getElementById('landing-theme-toggle');
+            const icon = document.getElementById('landing-theme-icon');
+            const setTheme = (dark) => {
+                document.body.classList.toggle('dark-mode', dark);
+                if (icon) icon.textContent = dark ? 'light_mode' : 'dark_mode';
+            };
+            setTheme(localStorage.getItem(key) === 'dark');
+            toggle?.addEventListener('click', () => {
+                const dark = !document.body.classList.contains('dark-mode');
+                localStorage.setItem(key, dark ? 'dark' : 'light');
+                setTheme(dark);
+            });
         })();
     </script>
 </body>

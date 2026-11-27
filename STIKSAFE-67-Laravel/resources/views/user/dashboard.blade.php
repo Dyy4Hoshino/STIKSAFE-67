@@ -126,7 +126,7 @@
                                     'safe' => ['Aman', 'safe'],
                                     'suspicious' => ['Mencurigakan', 'warn'],
                                     'malicious' => ['Berbahaya', 'danger'],
-                                    'unknown' => ['Tidak diketahui', 'neutral'],
+                                    'unknown' => ['Indikasi netral', 'neutral'],
                                     default => ['Selesai', 'neutral'],
                                 },
                                 'failed' => ['Gagal', 'danger'],

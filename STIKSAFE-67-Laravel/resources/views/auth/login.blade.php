@@ -2,7 +2,7 @@
 @section('title', 'Masuk | STIKSAFE-67')
 
 @section('auth_topbar_right')
-    <a class="auth-back" href="{{ route('register') }}" style="color:#a33900;font-weight:600">Buat akun baru</a>
+    <a class="auth-back" href="{{ route('register') }}" style="color:#f97316;font-weight:600">Buat akun baru</a>
 @endsection
 
 @section('content')
@@ -33,7 +33,10 @@
         </div>
         <div class="field" style="margin-top:16px">
             <label for="password">KATA SANDI</label>
-            <input id="password" name="password" type="password" required autocomplete="current-password">
+            <div class="password-control">
+                <input id="password" name="password" type="password" required autocomplete="current-password">
+                <button class="password-toggle" type="button" data-password-toggle="password" aria-label="Tampilkan kata sandi"><span class="material-symbols-outlined" aria-hidden="true">visibility</span></button>
+            </div>
             @error('password')<span class="error">{{ $message }}</span>@enderror
         </div>
         <div class="actions">
@@ -43,10 +46,10 @@
     </form>
 
     <p class="muted" style="font-size:13px;margin:18px 0 0">
-        <a style="color:#a33900;font-weight:500" href="{{ route('password.request') }}">Lupa kata sandi?</a>
+        <a style="color:#f97316;font-weight:500" href="{{ route('password.request') }}">Lupa kata sandi?</a>
     </p>
     <p class="muted" style="font-size:13px;margin:14px 0 0">
-        Belum punya akun? <a style="color:#a33900;font-weight:600" href="{{ route('register') }}">Buat akun baru</a>
+        Belum punya akun? <a style="color:#f97316;font-weight:600" href="{{ route('register') }}">Buat akun baru</a>
     </p>
 </div>
 @endsection

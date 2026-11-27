@@ -5,7 +5,18 @@
 <div class="profile-page">
     <div class="eyebrow">PENGATURAN AKUN</div>
     <h1>Profil Anda.</h1>
-    <p class="muted" style="margin:0 0 18px">Kelola identitas, foto profil, dan keamanan akun.</p>
+    <p class="muted" style="margin:0 0 18px">Kelola identitas, foto profil, tampilan, dan keamanan akun.</p>
+
+    <section class="panel theme-preference" aria-labelledby="theme-heading">
+        <div>
+            <h2 id="theme-heading" style="margin:0 0 3px">Tampilan website</h2>
+            <p class="muted" style="margin:0;font-size:13px">Pilih tema yang nyaman. Pengaturan tersimpan di browser ini.</p>
+        </div>
+        <button class="btn" type="button" id="theme-toggle" aria-pressed="false">
+            <span class="material-symbols-outlined" id="theme-icon" aria-hidden="true">dark_mode</span>
+            <span id="theme-label">Aktifkan dark mode</span>
+        </button>
+    </section>
 
     @if (session('status'))
         <p class="alert alert-success" role="status">{{ session('status') }}</p>
@@ -126,6 +137,8 @@
 </div>
 
 <style>
+.theme-preference { display:flex; justify-content:space-between; align-items:center; gap:16px; margin:18px 0; }
+@media (max-width:520px) { .theme-preference { align-items:stretch; flex-direction:column; } }
 .profile-page { width: min(100%, 740px); margin: 0 auto; }
 .profile-card { margin-top: 18px; }
 .profile-heading { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }

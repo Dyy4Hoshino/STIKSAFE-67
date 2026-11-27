@@ -21,9 +21,7 @@ class AdminNotificationBroadcastController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'target' => ['required', 'in:all_users,all_admins,all,custom'],
-            'user_ids' => ['required_if:target,custom', 'array', 'min:1', 'max:100'],
-            'user_ids.*' => ['integer', 'distinct', 'exists:users,id'],
+            'target' => ['required', 'in:all_users,all_admins,all'],
             'title' => ['required', 'string', 'max:150'],
             'message' => ['required', 'string', 'max:1000'],
         ]);
@@ -34,8 +32,6 @@ class AdminNotificationBroadcastController extends Controller
             $query->where('role', 'user');
         } elseif ($validated['target'] === 'all_admins') {
             $query->where('role', 'admin');
-        } elseif ($validated['target'] === 'custom') {
-            $query->whereIn('id', $validated['user_ids']);
         }
 
         $users = $query->get();

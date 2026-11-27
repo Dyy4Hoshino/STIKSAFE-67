@@ -25,7 +25,7 @@
                 <label for="result">HASIL</label>
                 <select id="result" name="filter[result]">
                     <option value="">Semua hasil</option>
-                    @foreach (['safe' => 'Aman', 'suspicious' => 'Mencurigakan', 'malicious' => 'Berbahaya', 'unknown' => 'Tidak diketahui'] as $value => $label)
+                    @foreach (['safe' => 'Aman', 'suspicious' => 'Mencurigakan', 'malicious' => 'Berbahaya', 'unknown' => 'Indikasi netral'] as $value => $label)
                         <option value="{{ $value }}" @selected(request('filter.result') === $value)>{{ $label }}</option>
                     @endforeach
                 </select>

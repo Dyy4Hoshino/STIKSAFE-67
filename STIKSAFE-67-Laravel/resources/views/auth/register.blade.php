@@ -2,7 +2,7 @@
 @section('title', 'Daftar | STIKSAFE-67')
 
 @section('auth_topbar_right')
-    <a class="auth-back" href="{{ route('login') }}" style="color:#a33900;font-weight:600">Sudah punya akun</a>
+    <a class="auth-back" href="{{ route('login') }}" style="color:#f97316;font-weight:600">Sudah punya akun</a>
 @endsection
 
 @section('content')
@@ -36,18 +36,24 @@
             </div>
             <div class="field">
                 <label for="password">KATA SANDI</label>
-                <input id="password" name="password" type="password" required minlength="12" autocomplete="new-password">
+                <div class="password-control">
+                    <input id="password" name="password" type="password" required minlength="12" autocomplete="new-password">
+                    <button class="password-toggle" type="button" data-password-toggle="password" aria-label="Tampilkan kata sandi"><span class="material-symbols-outlined" aria-hidden="true">visibility</span></button>
+                </div>
                 <small>Minimal 12 karakter.</small>
                 @error('password')<span class="error">{{ $message }}</span>@enderror
             </div>
             <div class="field">
                 <label for="password_confirmation">KONFIRMASI KATA SANDI</label>
-                <input id="password_confirmation" name="password_confirmation" type="password" required minlength="12" autocomplete="new-password">
+                <div class="password-control">
+                    <input id="password_confirmation" name="password_confirmation" type="password" required minlength="12" autocomplete="new-password">
+                    <button class="password-toggle" type="button" data-password-toggle="password_confirmation" aria-label="Tampilkan konfirmasi kata sandi"><span class="material-symbols-outlined" aria-hidden="true">visibility</span></button>
+                </div>
             </div>
         </div>
 
         <label class="muted" style="display:flex;align-items:flex-start;gap:8px;margin-top:18px;font-size:12.5px;cursor:pointer">
-            <input id="accept_terms" name="accept_terms" type="checkbox" value="1" required style="margin-top:3px;accent-color:#a33900">
+            <input id="accept_terms" name="accept_terms" type="checkbox" value="1" required style="margin-top:3px;accent-color:#f97316">
             <span>Saya menyetujui syarat penggunaan layanan STIKSAFE-67</span>
         </label>
         @error('accept_terms')<span class="error">{{ $message }}</span>@enderror
