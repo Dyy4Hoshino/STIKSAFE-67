@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Web;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Services\AuditLogService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
@@ -96,12 +97,21 @@ class AdminUserController extends Controller
         });
     }
 
-    public function forceLogout(Request $request, User $user, AuditLogService $audit)
+    public function forceLogout(Request $request, User $user, AuditLogService $audit): RedirectResponse
     {
         abort_if($request->user()->is($user), 403, 'Tidak dapat mencabut sesi akun sendiri dari halaman ini.');
-        $user->tokens()->delete();
-        $audit->record('account.sessions.revoked', 'user', $user->id, severity: 'warn', request: $request);
 
-        return back()->with('success', 'Token API pengguna telah dicabut.');
+        $tokensRevoked = $user->tokens()->delete();
+
+        if (config('session.driver') === 'database') {
+            DB::table(config('session.table', 'sessions'))->where('user_id', $user->getKey())->delete();
+        }
+
+        $audit->record('account.sessions.revoked', 'user', $user->id, [
+            'api_tokens_revoked' => $tokensRevoked,
+            'session_driver' => config('session.driver'),
+        ], severity: 'warn', request: $request);
+
+        return back()->with('success', 'Sesi pengguna dicabut. Login berikutnya wajib dilakukan ulang.');
     }
 }

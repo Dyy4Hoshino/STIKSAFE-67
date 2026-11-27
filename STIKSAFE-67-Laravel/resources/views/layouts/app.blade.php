@@ -8,7 +8,7 @@
     <style>
         body{margin:0;background:#0B1120 url('{{ asset('img/cyber-grid.svg') }}') center/cover fixed;color:#f8fafc;font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
         .shell{position:relative;z-index:1;width:min(1120px,calc(100% - 40px));margin:auto}
-        .appbar{min-height:74px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(148,163,184,.14);gap:16px}
+        .appbar{position:relative;z-index:1000;min-height:74px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(148,163,184,.14);gap:16px}
         .brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.04em;text-decoration:none;color:#f8fafc}
         .brand img{width:36px;height:36px}
         .brand em{color:#FF6700;font-style:normal}
@@ -16,9 +16,13 @@
         .nav a{color:#cbd5e1;text-decoration:none;transition:color .15s}
         .nav a:hover{color:#FF6700}
         .nav form{display:inline}
-        .nav-group{display:flex;align-items:center;gap:12px}
-        .nav-admin{border-left:1px solid rgba(255,103,0,.45);padding-left:14px}
-        .nav-admin-label{color:#FF8A38;font:10px 'JetBrains Mono',monospace;letter-spacing:.08em}
+        .nav-admin-wrapper{position:relative;display:inline-block}
+        .nav-admin-btn{border-color:#FF6700;color:#FF8A38;display:inline-flex;align-items:center;gap:6px}
+        .nav-admin-btn:hover{background:rgba(255,103,0,.15)}
+        .admin-dropdown{position:absolute;top:calc(100% + 8px);right:0;background:rgba(15,23,42,.98);border:1px solid rgba(255,103,0,.35);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:10px;min-width:200px;box-shadow:0 20px 40px rgba(0,0,0,.8);backdrop-filter:blur(16px);z-index:9999}
+        .admin-dropdown a{color:#cbd5e1;text-decoration:none;font-size:13px;padding:6px 10px;border-radius:6px;display:flex;align-items:center;justify-content:space-between;transition:all .15s}
+        .admin-dropdown a:hover,.admin-dropdown a.active{background:rgba(255,103,0,.15);color:#FF6700}
+        .nav-admin-label{color:#FF8A38;font:10px 'JetBrains Mono',monospace;letter-spacing:.08em;padding:0 10px 4px;border-bottom:1px solid rgba(255,103,0,.2);display:block}
         .nav-badge{display:inline-grid;place-items:center;min-width:18px;height:18px;padding:0 5px;border-radius:999px;background:#FF6700;color:#111827;font-size:10px;font-weight:800}
         .nav button,.btn{border:1px solid rgba(70,130,180,.35);border-radius:8px;background:rgba(15,23,42,.8);color:#f8fafc;padding:9px 14px;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;text-decoration:none;display:inline-block;transition:all .15s}
         .btn:hover{border-color:#FF6700}
@@ -55,7 +59,8 @@
         .alert{padding:12px 16px;border-radius:8px;margin-bottom:18px;font-size:13px;border:1px solid rgba(239,68,68,.3);background:rgba(239,68,68,.1);color:#fca5a5}
         .actions{display:flex;align-items:center;gap:12px;margin-top:18px;flex-wrap:wrap}
         .footer{border-top:1px solid rgba(148,163,184,.14);padding:20px 0;color:#718096;font-size:11px;text-align:center}
-        @media(max-width:800px){.appbar{flex-wrap:wrap;padding:12px 0}.grid{grid-template-columns:repeat(2,1fr)}.nav{flex-wrap:wrap;gap:10px}}
+        @media(max-width:1100px){.appbar{flex-wrap:wrap;padding:12px 0}.nav{flex-wrap:wrap;gap:10px}.admin-dropdown{right:auto;left:0}}
+        @media(max-width:800px){.grid{grid-template-columns:repeat(2,1fr)}}
     </style>
 </head>
 <body>
@@ -73,7 +78,9 @@
                 <a href="{{ route('history') }}">Riwayat</a>
                 <a href="{{ route('notifications') }}">
                     Notifikasi
-                    @php($unreadNotificationCount = auth()->user()->unreadNotifications()->count())
+                    @php
+                        $unreadNotificationCount = auth()->user()->unreadNotifications()->count();
+                    @endphp
                     @if($unreadNotificationCount > 0)
                         <span class="nav-badge" aria-label="{{ $unreadNotificationCount }} belum dibaca">{{ $unreadNotificationCount }}</span>
                     @endif
@@ -84,14 +91,29 @@
         </div>
 
         @if(auth()->user()?->role === 'admin')
-            @php($newFeedbackCount = \App\Models\ScanFeedback::query()->whereNull('reviewed_at')->count())
-            <div class="nav-group nav-admin" aria-label="Menu khusus Admin">
-                <span class="nav-admin-label">ADMIN</span>
-                <a href="{{ route('admin.dashboard') }}">Dashboard</a>
-                <a href="{{ route('admin.scans') }}">Scan Log</a>
-                <a href="{{ route('admin.users') }}">Pengguna</a>
-                <a href="{{ route('admin.feedback') }}">Feedback <span class="nav-badge">{{ $newFeedbackCount }}</span></a>
-                <a href="{{ route('admin.settings') }}">Setelan</a>
+            @php
+                try {
+                    $newFeedbackCount = \App\Models\ScanFeedback::query()->whereNull('reviewed_at')->count();
+                } catch (\Throwable $e) {
+                    $newFeedbackCount = 0;
+                }
+                $isAdminRoute = request()->routeIs('admin.*');
+                $adminMenuOpen = $isAdminRoute || session('admin_menu_open', false);
+            @endphp
+            <div class="nav-admin-wrapper">
+                <button class="btn nav-admin-btn" type="button" id="admin-menu-toggle" aria-controls="admin-menu" aria-expanded="{{ isset($adminMenuOpen) && $adminMenuOpen ? 'true' : 'false' }}">
+                    Menu Admin <span aria-hidden="true">▾</span>
+                </button>
+                <div class="admin-dropdown" id="admin-menu" @if (! isset($adminMenuOpen) || ! $adminMenuOpen) hidden @endif>
+                    <span class="nav-admin-label">ADMIN</span>
+                    <a class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}" href="{{ route('admin.dashboard') }}">Dashboard</a>
+                    <a class="{{ request()->routeIs('admin.scans*') ? 'active' : '' }}" href="{{ route('admin.scans') }}">Scan Log</a>
+                    <a class="{{ request()->routeIs('admin.users*') ? 'active' : '' }}" href="{{ route('admin.users') }}">Pengguna</a>
+                    <a class="{{ request()->routeIs('admin.feedback*') ? 'active' : '' }}" href="{{ route('admin.feedback') }}">Feedback <span class="nav-badge">{{ $newFeedbackCount ?? 0 }}</span></a>
+                    <a class="{{ request()->routeIs('admin.notifications.*') ? 'active' : '' }}" href="{{ route('admin.notifications.create') }}">Kirim Notifikasi</a>
+                    <a class="{{ request()->routeIs('admin.audit-logs') ? 'active' : '' }}" href="{{ route('admin.audit-logs') }}">Audit Log</a>
+                    <a class="{{ request()->routeIs('admin.settings*') ? 'active' : '' }}" href="{{ route('admin.settings') }}">Setelan</a>
+                </div>
             </div>
         @endif
 
@@ -127,5 +149,38 @@
 <footer class="footer">
     <div class="shell">STIKSAFE-67 · SMK N 1 MAS UBUD · Pemeriksaan Keamanan File & URL</div>
 </footer>
+@auth
+    @if (auth()->user()?->role === 'admin')
+        <script>
+            (() => {
+                const button = document.getElementById('admin-menu-toggle');
+                const menu = document.getElementById('admin-menu');
+
+                if (!button || !menu) return;
+
+                button.addEventListener('click', () => {
+                    const isOpen = button.getAttribute('aria-expanded') === 'true';
+                    button.setAttribute('aria-expanded', String(!isOpen));
+                    menu.hidden = isOpen;
+                });
+
+                document.addEventListener('click', (event) => {
+                    if (!event.target.closest('.nav-admin-wrapper')) {
+                        button.setAttribute('aria-expanded', 'false');
+                        menu.hidden = true;
+                    }
+                });
+
+                document.addEventListener('keydown', (event) => {
+                    if (event.key === 'Escape') {
+                        button.setAttribute('aria-expanded', 'false');
+                        menu.hidden = true;
+                        button.focus();
+                    }
+                });
+            })();
+        </script>
+    @endif
+@endauth
 </body>
 </html>

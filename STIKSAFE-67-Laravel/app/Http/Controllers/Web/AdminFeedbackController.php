@@ -6,24 +6,29 @@ use App\Http\Controllers\Controller;
 use App\Models\ScanFeedback;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class AdminFeedbackController extends Controller
 {
     public function index(Request $request): View
     {
+        $filters = $request->validate([
+            'status' => ['nullable', Rule::in(['new', 'reviewed'])],
+            'type' => ['nullable', Rule::in(['false_positive', 'false_negative'])],
+        ]);
         $query = ScanFeedback::query()->with(['scan:id,original_filename,result_label', 'user:id,name,email', 'reviewer:id,name']);
 
-        if ($request->string('status')->toString() === 'reviewed') {
+        if (($filters['status'] ?? null) === 'reviewed') {
             $query->whereNotNull('reviewed_at');
         }
 
-        if ($request->string('status')->toString() === 'new') {
+        if (($filters['status'] ?? null) === 'new') {
             $query->whereNull('reviewed_at');
         }
 
-        if ($request->filled('type')) {
-            $query->where('type', $request->string('type')->toString());
+        if (! empty($filters['type'])) {
+            $query->where('type', $filters['type']);
         }
 
         return view('admin.feedback.index', [
@@ -33,11 +38,13 @@ class AdminFeedbackController extends Controller
 
     public function review(Request $request, ScanFeedback $feedback): RedirectResponse
     {
-        $feedback->update([
+        abort_if($feedback->reviewed_at !== null, 409, 'Feedback ini sudah ditinjau.');
+
+        $feedback->forceFill([
             'reviewed_by' => $request->user()->getKey(),
             'reviewed_at' => now(),
             'status' => 'reviewed',
-        ]);
+        ])->save();
 
         return back()->with('success', 'Feedback ditandai telah ditinjau.');
     }

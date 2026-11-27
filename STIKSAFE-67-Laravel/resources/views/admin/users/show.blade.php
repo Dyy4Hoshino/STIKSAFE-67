@@ -6,8 +6,8 @@
 <p class="muted">{{ $managedUser->email }}</p>
 
 <div class="grid" style="grid-template-columns:1fr 1fr;gap:20px;align-items:start">
-    <section class="panel">
-        <h3>Informasi & Perubahan Status</h3>
+    <section class="panel"><h3>Informasi & Perubahan Status</h3>
+        <dl class="muted"><dt>User ID</dt><dd>{{ $managedUser->id }}</dd><dt>Email</dt><dd>{{ $managedUser->email }}</dd><dt>Verifikasi email</dt><dd>{{ $managedUser->email_verified_at ? 'Terverifikasi' : 'Belum diverifikasi' }}</dd><dt>Bergabung</dt><dd>{{ $managedUser->created_at?->timezone(config('app.timezone'))->format('d M Y H:i') ?? '—' }}</dd></dl>
         <p class="muted">Status saat ini: <strong style="color:{{ $managedUser->status==='active'?'#10b981':'#ef4444' }}">{{ ucfirst($managedUser->status) }}</strong></p>
         @if($managedUser->status_reason)<p class="muted" style="font-size:13px">Alasan: {{ $managedUser->status_reason }}</p>@endif
 
@@ -16,16 +16,16 @@
             @csrf
             @method('PATCH')
             <div class="field">
-                <label>Ubah Status</label>
-                <select name="status" style="background:#0b1120;border:1px solid rgba(70,130,180,.35);color:#f8fafc;padding:8px 12px;border-radius:8px">
+                <label for="status">Ubah Status</label>
+                <select id="status" name="status">
                     <option value="active" @selected($managedUser->status==='active')>Active</option>
                     <option value="suspended" @selected($managedUser->status==='suspended')>Suspended</option>
                     <option value="inactive" @selected($managedUser->status==='inactive')>Inactive</option>
                 </select>
             </div>
             <div class="field">
-                <label>Alasan (wajib jika Suspended)</label>
-                <input type="text" name="reason" value="{{ old('reason') }}" placeholder="Contoh: Pelanggaran TOS..." style="background:#0b1120;border:1px solid rgba(70,130,180,.35);color:#f8fafc;padding:8px 12px;border-radius:8px">
+                <label for="reason">Alasan (wajib jika Suspended)</label>
+                <input id="reason" type="text" name="reason" value="{{ old('reason') }}" placeholder="Contoh: Pelanggaran TOS..." maxlength="255">
             </div>
             <button type="submit" class="btn primary">Simpan Status</button>
         </form>

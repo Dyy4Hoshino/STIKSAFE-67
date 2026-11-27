@@ -22,8 +22,8 @@ class AdminNotificationBroadcastController extends Controller
     {
         $validated = $request->validate([
             'target' => ['required', 'in:all_users,all_admins,all,custom'],
-            'user_ids' => ['required_if:target,custom', 'array'],
-            'user_ids.*' => ['exists:users,id'],
+            'user_ids' => ['required_if:target,custom', 'array', 'min:1', 'max:100'],
+            'user_ids.*' => ['integer', 'distinct', 'exists:users,id'],
             'title' => ['required', 'string', 'max:150'],
             'message' => ['required', 'string', 'max:1000'],
         ]);
@@ -40,6 +40,11 @@ class AdminNotificationBroadcastController extends Controller
 
         $users = $query->get();
 
+        if ($users->isEmpty()) {
+            return back()->withErrors(['target' => 'Tidak ditemukan akun penerima.'])->withInput();
+        }
+
+        $sentAt = now();
         foreach ($users as $user) {
             $user->notifications()->create([
                 'id' => (string) Str::uuid(),
@@ -48,10 +53,12 @@ class AdminNotificationBroadcastController extends Controller
                     'title' => $validated['title'],
                     'message' => $validated['message'],
                     'sent_by' => $request->user()->name,
+                    'sent_at' => $sentAt->toISOString(),
+                    'recipient_role' => $user->role,
                 ],
             ]);
         }
 
-        return redirect()->route('admin.dashboard')->with('success', 'Notifikasi berhasil dikirim ke '.$users->count().' pengguna.');
+        return redirect()->route('admin.notifications.create')->with('success', 'Notifikasi berhasil dikirim ke '.$users->count().' akun.');
     }
 }
