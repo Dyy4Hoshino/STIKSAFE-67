@@ -18,14 +18,6 @@
                 <a class="btn" href="{{ route('history') }}">Lihat riwayat</a>
             </div>
         </div>
-        <div class="status-box" aria-label="Status layanan">
-            <div class="shield-mark">SAFE</div>
-            <div>
-                <span class="eyebrow" style="color:#006948;font-size:10px">SYSTEM STATUS</span>
-                <strong>Siap memindai</strong>
-                <span>File &amp; URL analysis</span>
-            </div>
-        </div>
     </section>
 
     {{-- Section: Statistik scan — exact original copy --}}
@@ -170,31 +162,6 @@
 .welcome-copy h1 { margin: 6px 0 4px; font-size: clamp(26px, 3.6vw, 34px); }
 .welcome-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
 
-.status-box {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 14px 18px;
-    min-width: 225px;
-    border-radius: 10px;
-    background: #ecfdf5;
-    border: 1px solid #a7f3d0;
-}
-.shield-mark {
-    width: 46px;
-    height: 46px;
-    border-radius: 999px;
-    background: #ffffff;
-    border: 1px solid #a7f3d0;
-    color: #006948;
-    font: 700 10px 'JetBrains Mono', monospace;
-    display: grid;
-    place-items: center;
-    flex-shrink: 0;
-}
-.status-box strong { display: block; font-size: 14px; color: #191c1e; margin: 2px 0; }
-.status-box span { display: block; font-size: 11.5px; color: #565e74; }
-
 .section-bar { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
 .period-pill { padding: 4px 10px; border-radius: 999px; background: #f2f4f6; border: 1px solid #e6e8ea; font-size: 12px; color: #565e74; }
 
@@ -263,7 +230,6 @@
     .welcome-card { padding: 18px; gap: 16px; }
     .welcome-actions { width: 100%; flex-direction: column; }
     .welcome-actions .btn { width: 100%; }
-    .status-box { width: 100%; min-width: 0; }
     .kpi-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
     .kpi-card { padding: 14px; }
     .kpi-label { font-size: 10px; }

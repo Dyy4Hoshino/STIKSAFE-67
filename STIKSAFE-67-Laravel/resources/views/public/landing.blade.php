@@ -40,9 +40,15 @@
             position: sticky;
             top: 0;
             z-index: 50;
-            background: rgba(255, 255, 255, 0.96);
-            backdrop-filter: blur(8px);
-            border-bottom: 1px solid #e6e8ea;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-top: 3px solid #f97316;
+            border-bottom: 1.5px solid #cbd5e1;
+            box-shadow:
+                0 1px 2px rgba(15, 23, 42, 0.06),
+                0 4px 10px rgba(15, 23, 42, 0.07),
+                0 10px 24px -6px rgba(15, 23, 42, 0.08);
         }
         .topbar {
             min-height: 76px;
@@ -195,10 +201,15 @@
         .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 26px; }
         .microcopy {
             margin: 20px 0 0;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px 10px;
             color: #64748b;
             font: 500 11px 'JetBrains Mono', monospace;
             letter-spacing: 0.06em;
         }
+        .microcopy span { white-space: nowrap; }
 
         /* Right Hero Visual Card — Interactive Security Radar + Centered Logo */
         .visual-card {
@@ -359,7 +370,7 @@
                 grid-template-columns: 1.12fr 0.88fr;
                 gap: 16px;
                 align-items: start;
-                padding: 24px 0 34px;
+                padding: 38px 0 36px;
             }
             h1 { font-size: clamp(24px, 5.8vw, 34px); margin: 0 0 10px; }
             .intro { font-size: 13px; line-height: 1.55; }
@@ -420,13 +431,22 @@
             .hero {
                 grid-template-columns: 1.12fr 0.88fr;
                 gap: 12px;
-                padding: 22px 0 30px;
+                padding: 34px 0 32px;
             }
             h1 { font-size: 22px; margin: 0 0 8px; }
             .intro { font-size: 12px; line-height: 1.5; }
             .hero-actions { flex-direction: column; gap: 7px; margin-top: 14px; }
             .hero-actions .button { width: 100%; padding: 8px 10px; font-size: 11.5px; }
-            .microcopy { font-size: 8.5px; letter-spacing: 0.03em; }
+            .microcopy {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 4px;
+                margin-top: 12px;
+                font-size: 9px;
+                letter-spacing: 0.04em;
+                line-height: 1.4;
+            }
+            .microcopy-sep { display: none; }
             .visual-card { min-height: 196px; padding-bottom: 40px; }
             .visual-stage { height: 156px; }
             .radar-logo-core { width: 44px; height: 44px; padding: 7px; }
@@ -491,7 +511,11 @@
                         <a class="button primary" href="{{ route('register') }}">Mulai pemeriksaan <span aria-hidden="true">→</span></a>
                         <a class="button" href="{{ route('login') }}">Masuk ke akun</a>
                     </div>
-                    <p class="microcopy">STATIC ANALYSIS &nbsp;·&nbsp; ACCOUNT-BASED SCAN HISTORY</p>
+                    <p class="microcopy">
+                        <span>STATIC ANALYSIS</span>
+                        <span class="microcopy-sep" aria-hidden="true">·</span>
+                        <span>ACCOUNT-BASED SCAN HISTORY</span>
+                    </p>
                 </div>
 
                 <div class="visual-card" id="visual-radar-card" data-ml-status-url="{{ route('ml.status') }}" aria-label="Radar pemantauan status layanan ML STIKSAFE">

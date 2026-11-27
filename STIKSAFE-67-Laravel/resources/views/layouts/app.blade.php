@@ -41,10 +41,15 @@
             position: sticky;
             top: 0;
             z-index: 50;
-            background: rgba(255, 255, 255, 0.96);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            border-bottom: 1px solid #e6e8ea;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-top: 3px solid #f97316;
+            border-bottom: 1.5px solid #cbd5e1;
+            box-shadow:
+                0 1px 2px rgba(15, 23, 42, 0.06),
+                0 4px 10px rgba(15, 23, 42, 0.07),
+                0 10px 24px -6px rgba(15, 23, 42, 0.08);
         }
         .appbar {
             min-height: 68px;
@@ -506,17 +511,25 @@
             border-color: #2a384e !important;
             color: #cbd5e1 !important;
         }
-        body.dark-mode .tab-list {
+        body.dark-mode .tab-list,
+        body.dark-mode .tab-container {
             background: #0e141f !important;
-            border-color: #212c3d !important;
+            border: 1px solid #212c3d !important;
         }
         body.dark-mode .tab-btn {
             color: #94a3b8 !important;
         }
+        body.dark-mode .tab-btn:hover {
+            color: #f1f5f9 !important;
+        }
         body.dark-mode .tab-btn.active {
             background: #1e293b !important;
-            border-color: #334155 !important;
+            border: 1px solid #334155 !important;
             color: #ffffff !important;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25) !important;
+        }
+        body.dark-mode .tab-btn.active .material-symbols-outlined {
+            color: #ff7b00 !important;
         }
         body.dark-mode .drop-zone {
             background: #0e141f !important;

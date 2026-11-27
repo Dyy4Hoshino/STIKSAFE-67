@@ -284,13 +284,71 @@
         body.dark-mode .btn:not(.primary) { background:#1e293b; border-color:#334155; color:#f1f5f9; }
         body.dark-mode .password-toggle:hover { background:#1e293b; color:#ff7b00; }
 
+        .auth-mobile-foot {
+            display: none;
+        }
+
         @media (max-width: 960px) {
-            .auth-shell { grid-template-columns: 1fr; }
-            .auth-aside { padding: 24px 20px; }
+            .auth-shell {
+                display: flex;
+                flex-direction: column;
+                min-height: 100dvh;
+            }
+            .auth-aside {
+                flex: 0 0 auto;
+                padding: 16px 20px;
+                justify-content: center;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            }
             .auth-aside-mid, .auth-aside-foot { display: none; }
-            .auth-main { min-height: auto; padding: 24px 20px 40px; }
-            .auth-form-center { align-items: flex-start; padding-top: 12px; }
+            .auth-main {
+                flex: 1 1 auto;
+                min-height: 0;
+                padding: 20px 20px 0;
+                position: relative;
+            }
+            .auth-topbar { margin-bottom: 18px; }
+            .auth-form-center { flex: 0 0 auto; align-items: flex-start; padding: 8px 0 28px; }
+            .auth-mobile-foot {
+                display: block;
+                margin: auto -20px 0;
+                padding: 40px 20px 20px;
+                text-align: center;
+                background:
+                    radial-gradient(ellipse 90% 95% at 50% 100%, rgba(249, 115, 22, 0.14) 0%, rgba(86, 94, 116, 0.06) 58%, transparent 100%);
+                box-shadow:
+                    inset 0 -18px 28px -12px rgba(15, 23, 42, 0.1),
+                    0 -6px 20px -10px rgba(15, 23, 42, 0.08);
+                border-bottom: 3px solid #f97316;
+            }
+            body.dark-mode .auth-mobile-foot {
+                background:
+                    radial-gradient(ellipse 90% 95% at 50% 100%, rgba(249, 115, 22, 0.18) 0%, rgba(30, 144, 255, 0.06) 58%, transparent 100%);
+                box-shadow:
+                    inset 0 -18px 28px -12px rgba(0, 0, 0, 0.35),
+                    0 -6px 20px -10px rgba(0, 0, 0, 0.28);
+            }
+            .auth-mobile-copy {
+                margin: 0;
+                font-family: 'JetBrains Mono', monospace;
+                font-size: 10.5px;
+                letter-spacing: 0.05em;
+                color: #64748b;
+            }
+            body.dark-mode .auth-mobile-copy { color: #94a3b8; }
             .form-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 420px) {
+            .auth-aside { padding: 14px 16px; }
+            .auth-brand-row { gap: 10px; }
+            .auth-brand { font-size: 15px; gap: 8px; }
+            .auth-brand img { width: 30px; height: 30px; }
+            .auth-school { font-size: 9.5px; gap: 6px; }
+            .auth-school img { width: 18px; height: 20px; }
+            .auth-main { padding: 16px 16px 0; }
+            .auth-mobile-foot { margin: auto -16px 0; padding: 32px 16px 18px; }
+            .actions { flex-direction: column; align-items: stretch; }
+            .actions .btn { width: 100%; }
         }
     </style>
 </head>
@@ -356,6 +414,10 @@
             <div class="auth-form-center">
                 @yield('content')
             </div>
+
+            <footer class="auth-mobile-foot">
+                <p class="auth-mobile-copy">&copy; {{ date('Y') }} STIKSAFE-67 &middot; SMK Negeri 1 Mas Ubud</p>
+            </footer>
         </main>
     </div>
     <script>
