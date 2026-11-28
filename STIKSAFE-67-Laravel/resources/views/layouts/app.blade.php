@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="theme-color" content="#f5f7fa">
-    <link rel="icon" type="image/jpeg" href="{{ asset('img/stiksafe-shield-logo.jpg') }}">
+    <link rel="icon" type="image/png" href="{{ asset('img/stiksafe-shield-logo.png') }}">
     <title>@yield('title', 'STIKSAFE-67')</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -73,10 +73,6 @@
             width: 34px;
             height: 34px;
             object-fit: contain;
-            background: #ffffff;
-            border: 1px solid #e6e8ea;
-            border-radius: 8px;
-            padding: 2px;
         }
         .brand em {
             color: #f97316;
@@ -785,7 +781,7 @@
 <header class="site-header">
     <div class="shell appbar">
         <a class="brand" href="{{ route('home') }}">
-            <img src="{{ asset('img/stiksafe-shield-logo.jpg') }}" alt="Logo STIKSAFE">
+            <img src="{{ asset('img/stiksafe-shield-logo.png') }}" alt="Logo STIKSAFE">
             <span>STIK<em>SAFE</em></span>
         </a>
 
@@ -875,7 +871,7 @@
 
             @auth
                 <a href="{{ route('profile') }}" class="nav-profile" title="Buka Profil">
-                    @if(auth()->user()->avatar_path)
+                    @if(auth()->user()->avatar_path && \Illuminate\Support\Facades\Storage::disk('public')->exists(auth()->user()->avatar_path))
                         <img src="{{ asset('storage/' . auth()->user()->avatar_path) }}" alt="Foto Profil" class="nav-avatar">
                     @else
                         <div class="nav-avatar" aria-hidden="true">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</div>
@@ -900,13 +896,20 @@
                     @endif
                 </a>
                 <a href="{{ route('profile') }}" aria-label="Profil" style="margin-left:2px">
-                    @if(auth()->user()->avatar_path)
+                    @if(auth()->user()->avatar_path && \Illuminate\Support\Facades\Storage::disk('public')->exists(auth()->user()->avatar_path))
                         <img src="{{ asset('storage/' . auth()->user()->avatar_path) }}" alt="Foto Profil" class="nav-avatar">
                     @else
                         <div class="nav-avatar" aria-hidden="true">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</div>
                     @endif
                 </a>
             @else
+                <button class="btn" type="button" data-lang-toggle aria-label="Ganti bahasa" style="height:36px;padding:0 9px;gap:5px;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700">
+                    <svg style="width:15px;height:15px;stroke-width:1.9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                    <span data-lang-code>ID</span>
+                </button>
+                <button class="btn" type="button" data-theme-toggle aria-label="Ganti tema" style="width:36px;height:36px;padding:0">
+                    <span class="material-symbols-outlined" data-theme-icon style="font-size:18px" aria-hidden="true">dark_mode</span>
+                </button>
                 <a class="btn" href="{{ route('login') }}" style="padding:7px 12px;font-size:12.5px;font-weight:600">
                     <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" x2="3" y1="12" y2="12"/></svg>
                     <span>Masuk</span>
@@ -1033,16 +1036,20 @@
             if (icon) {
                 icon.textContent = isDark ? 'light_mode' : 'dark_mode';
             }
+            document.querySelectorAll('[data-theme-icon]').forEach((el) => {
+                el.textContent = isDark ? 'light_mode' : 'dark_mode';
+            });
             if (label) {
                 label.textContent = isDark ? 'Beralih ke mode terang' : 'Aktifkan dark mode';
             }
+            window.StiksafeI18n?.apply();
         };
 
         // Sync initially
         syncThemeUI();
 
         document.addEventListener('click', (e) => {
-            const btn = e.target.closest('#theme-toggle');
+            const btn = e.target.closest('#theme-toggle, [data-theme-toggle]');
             if (!btn) return;
             const willBeDark = !document.body.classList.contains('dark-mode');
             if (willBeDark) {
@@ -1056,5 +1063,6 @@
         });
     })();
 </script>
+<script src="{{ asset('js/stiksafe-i18n.js') }}" defer></script>
 </body>
 </html>

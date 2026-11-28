@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#f5f7fa">
-    <link rel="icon" type="image/jpeg" href="{{ asset('img/stiksafe-shield-logo.jpg') }}">
+    <link rel="icon" type="image/png" href="{{ asset('img/stiksafe-shield-logo.png') }}">
     <meta name="description" content="STIKSAFE membantu pemeriksaan awal keamanan file dengan analisis statis.">
     <title>STIKSAFE | Pemeriksaan Keamanan File</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -62,10 +62,6 @@
             width: 38px;
             height: 38px;
             object-fit: contain;
-            background: #ffffff;
-            border: 1px solid #e6e8ea;
-            border-radius: 9px;
-            padding: 3px;
         }
         .brand-name { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 17px; font-weight: 800; letter-spacing: 0.04em; color: #191c1e; }
         .brand-name span { color: #f97316; }
@@ -101,8 +97,47 @@
             max-width: 640px;
             margin: 0 auto;
         }
-        .mobile-login-btn {
+        .mobile-header-actions {
             display: none;
+            align-items: center;
+            gap: 8px;
+        }
+        .mobile-theme-btn {
+            width: 36px;
+            height: 36px;
+            padding: 0;
+            border: 1px solid #d8dadc;
+            border-radius: 7px;
+            background: #ffffff;
+            color: #191c1e;
+            display: inline-grid;
+            place-items: center;
+            cursor: pointer;
+            transition: background-color 0.15s, border-color 0.15s;
+        }
+        .mobile-theme-btn:hover { background: #f2f4f6; border-color: #cbd5e1; }
+        .mobile-theme-btn .material-symbols-outlined { font-size: 18px; }
+        .mobile-lang-btn {
+            height: 36px;
+            padding: 0 9px;
+            border: 1px solid #d8dadc;
+            border-radius: 7px;
+            background: #ffffff;
+            color: #191c1e;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.15s, border-color 0.15s;
+        }
+        .mobile-lang-btn:hover { background: #f2f4f6; border-color: #cbd5e1; }
+        .mobile-lang-btn svg,
+        .landing-lang-toggle svg { width: 15px; height: 15px; stroke-width: 1.9; flex-shrink: 0; }
+        .mobile-login-btn {
+            display: inline-flex;
             align-items: center;
             gap: 6px;
             padding: 7px 12px;
@@ -394,7 +429,7 @@
         @media (max-width: 768px) {
             .school-group { display: none; }
             .landing-header nav { display: none; }
-            .mobile-login-btn { display: inline-flex; }
+            .mobile-header-actions { display: inline-flex; }
             .landing-bottom-nav { display: block !important; }
             footer { margin-bottom: 66px; }
         }
@@ -410,19 +445,21 @@
         body.dark-mode .brand-caption, body.dark-mode nav, body.dark-mode .intro, body.dark-mode .section-copy, body.dark-mode .feature p, body.dark-mode .about-strip p, body.dark-mode footer { color: #94a3b8 !important; }
         body.dark-mode .brand-name span, body.dark-mode h1 span, body.dark-mode nav a:hover { color: #ff7b00 !important; }
         body.dark-mode .hero-band { background: transparent !important; border-color: #243247 !important; }
-        body.dark-mode .button:not(.primary), body.dark-mode .landing-theme-toggle { background: #1e293b !important; border-color: #334155 !important; color: #f1f5f9 !important; }
+        body.dark-mode .button:not(.primary), body.dark-mode .landing-theme-toggle, body.dark-mode .landing-lang-toggle, body.dark-mode .mobile-theme-btn, body.dark-mode .mobile-lang-btn, body.dark-mode .mobile-login-btn { background: #1e293b !important; border-color: #334155 !important; color: #f1f5f9 !important; }
         body.dark-mode .button.primary { background: #ff6a00 !important; border-color: #ff6a00 !important; }
         body.dark-mode .feature, body.dark-mode .about-strip { background: #131924 !important; border-color: #243247 !important; box-shadow: 0 5px 18px rgba(0,0,0,.25); }
         body.dark-mode .feature-mark { background: #2a1b12 !important; color: #ff9a3d !important; }
         body.dark-mode .visual-card { background: #131924 !important; border-color: #2a384e !important; box-shadow: 0 8px 24px rgba(0,0,0,.35); }
         body.dark-mode .visual-stage { background: radial-gradient(circle at 50% 50%, rgba(30,41,59,.95), rgba(15,23,42,.5) 68%, transparent 100%); }
         body.dark-mode .visual-label { background: #111722 !important; border-color: #2a384e !important; color: #94a3b8 !important; }
-        body.dark-mode .radar-logo-core { background: #f8fafc; }
+        body.dark-mode .radar-logo-core { background: rgba(15, 23, 42, 0.92); }
         body.dark-mode .landing-bottom-nav { background: rgba(15,23,42,.97); border-color: #243247; }
         body.dark-mode .landing-bottom-tab { color: #94a3b8; }
         body.dark-mode .landing-bottom-tab.active, body.dark-mode .landing-bottom-tab.cta { color: #ff7b00; }
         .landing-theme-toggle { display:inline-flex; align-items:center; gap:6px; padding:7px 10px; border:1px solid #d8dadc; border-radius:7px; background:#fff; color:#191c1e; cursor:pointer; font:600 12px inherit; }
         .landing-theme-toggle .material-symbols-outlined { font-size:16px; }
+        .landing-lang-toggle { display:inline-flex; align-items:center; gap:5px; padding:7px 10px; border:1px solid #d8dadc; border-radius:7px; background:#fff; color:#191c1e; cursor:pointer; font:700 11.5px 'JetBrains Mono', monospace; }
+        .landing-lang-toggle:hover { background:#f2f4f6; border-color:#cbd5e1; }
 
         @media (max-width: 520px) {
             .site-shell { width: calc(100% - 24px); }
@@ -463,7 +500,7 @@
         <div class="site-shell topbar">
             <div class="brand-group">
                 <a class="brand-group" href="{{ route('home') }}" aria-label="STIKSAFE beranda">
-                    <img class="brand-logo" src="{{ asset('img/stiksafe-shield-logo.jpg') }}" alt="Logo STIKSAFE">
+                    <img class="brand-logo" src="{{ asset('img/stiksafe-shield-logo.png') }}" alt="Logo STIKSAFE">
                     <span>
                         <span class="brand-name">STIK<span>SAFE</span></span>
                         <span class="brand-caption">FILE SECURITY LAB</span>
@@ -487,16 +524,29 @@
                     <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" x2="3" y1="12" y2="12"/></svg>
                     <span>Masuk</span>
                 </a>
+                <button class="landing-lang-toggle" type="button" data-lang-toggle aria-label="Ganti bahasa">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                    <span data-lang-code>ID</span>
+                </button>
                 <button class="landing-theme-toggle" id="landing-theme-toggle" type="button" aria-label="Ganti tema"><span class="material-symbols-outlined" id="landing-theme-icon">dark_mode</span></button>
                 <a class="button primary" href="{{ route('register') }}" style="padding:8px 14px;font-size:13px">
                     <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><circle cx="12" cy="12" r="3"/></svg>
                     <span>Mulai scan <span aria-hidden="true">↗</span></span>
                 </a>
             </nav>
-            <a class="mobile-login-btn" href="{{ route('login') }}">
-                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" x2="3" y1="12" y2="12"/></svg>
-                <span>Masuk</span>
-            </a>
+            <div class="mobile-header-actions">
+                <button class="mobile-lang-btn" type="button" data-lang-toggle aria-label="Ganti bahasa">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                    <span data-lang-code>ID</span>
+                </button>
+                <button class="mobile-theme-btn" id="mobile-landing-theme-toggle" type="button" aria-label="Ganti tema">
+                    <span class="material-symbols-outlined" data-landing-theme-icon>dark_mode</span>
+                </button>
+                <a class="mobile-login-btn" href="{{ route('login') }}">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" x2="3" y1="12" y2="12"/></svg>
+                    <span>Masuk</span>
+                </a>
+            </div>
         </div>
     </header>
 
@@ -522,7 +572,7 @@
                     <div class="visual-stage" id="visual-radar-stage">
                         <canvas id="stiksafe-radar-canvas" aria-hidden="true"></canvas>
                         <div class="radar-logo-core">
-                            <img src="{{ asset('img/stiksafe-shield-logo.jpg') }}" alt="Logo Perisai STIKSAFE">
+                            <img src="{{ asset('img/stiksafe-shield-logo.png') }}" alt="Logo Perisai STIKSAFE">
                         </div>
                     </div>
                     <div class="visual-label">
@@ -630,6 +680,7 @@
                 card.classList.toggle('is-ml-online', mlOnline);
                 if (statusText) {
                     statusText.textContent = mlOnline ? 'STATUS: ML TERHUBUNG' : 'STATUS: ML OFFLINE';
+                    window.StiksafeI18n?.apply();
                 }
             }
 
@@ -851,19 +902,28 @@
 
         (() => {
             const key = 'stiksafe_theme';
-            const toggle = document.getElementById('landing-theme-toggle');
-            const icon = document.getElementById('landing-theme-icon');
+            const toggles = [
+                document.getElementById('landing-theme-toggle'),
+                document.getElementById('mobile-landing-theme-toggle')
+            ].filter(Boolean);
+            const icons = [
+                document.getElementById('landing-theme-icon'),
+                ...document.querySelectorAll('[data-landing-theme-icon]')
+            ].filter(Boolean);
             const setTheme = (dark) => {
                 document.body.classList.toggle('dark-mode', dark);
-                if (icon) icon.textContent = dark ? 'light_mode' : 'dark_mode';
+                icons.forEach((el) => { el.textContent = dark ? 'light_mode' : 'dark_mode'; });
             };
             setTheme(localStorage.getItem(key) === 'dark');
-            toggle?.addEventListener('click', () => {
-                const dark = !document.body.classList.contains('dark-mode');
-                localStorage.setItem(key, dark ? 'dark' : 'light');
-                setTheme(dark);
+            toggles.forEach((btn) => {
+                btn.addEventListener('click', () => {
+                    const dark = !document.body.classList.contains('dark-mode');
+                    localStorage.setItem(key, dark ? 'dark' : 'light');
+                    setTheme(dark);
+                });
             });
         })();
     </script>
+    <script src="{{ asset('js/stiksafe-i18n.js') }}" defer></script>
 </body>
 </html>

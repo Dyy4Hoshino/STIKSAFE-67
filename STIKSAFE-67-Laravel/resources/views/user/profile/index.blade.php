@@ -19,23 +19,29 @@
             <p class="muted" style="margin:0">Kelola identitas, foto profil, tampilan, dan keamanan akun.</p>
         </div>
 
-        {{-- 2. Theme Toggle (Desktop: top-right | Mobile: right below Info Akun) --}}
+        {{-- 2. Theme & Language Controls (Desktop: left column above Session | Mobile: right below Info Akun) --}}
         <div class="area-theme">
             <div class="theme-mobile-meta">
-                <span class="eyebrow">TAMPILAN WEBSITE</span>
-                <p class="muted" style="margin:2px 0 0;font-size:12.5px">Ganti mode terang atau gelap.</p>
+                <span class="eyebrow">TAMPILAN &amp; BAHASA</span>
+                <p class="muted" style="margin:2px 0 0;font-size:12.5px">Ganti mode terang/gelap dan bahasa tampilan.</p>
             </div>
-            <button class="btn profile-theme-btn" type="button" id="theme-toggle" aria-pressed="false">
-                <span class="material-symbols-outlined" id="theme-icon" aria-hidden="true">dark_mode</span>
-                <span id="theme-label">Aktifkan dark mode</span>
-            </button>
+            <div class="pref-controls">
+                <button class="btn profile-theme-btn" type="button" id="theme-toggle" aria-pressed="false">
+                    <span class="material-symbols-outlined" id="theme-icon" aria-hidden="true">dark_mode</span>
+                    <span id="theme-label">Aktifkan dark mode</span>
+                </button>
+                <button class="btn profile-lang-btn" type="button" data-lang-toggle aria-pressed="false">
+                    <svg class="pref-lang-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                    <span data-lang-label>Bahasa: Indonesia (ID)</span>
+                </button>
+            </div>
         </div>
 
         {{-- 3. Info Akun Card --}}
         <section class="panel identity-card area-identity">
             <div class="profile-heading">
                 <div class="avatar-wrap">
-                    @if ($user->avatar_path)
+                    @if ($user->avatar_path && \Illuminate\Support\Facades\Storage::disk('public')->exists($user->avatar_path))
                         <img src="{{ asset('storage/' . $user->avatar_path) }}" alt="Foto profil" class="avatar-img">
                     @else
                         <div class="avatar" aria-hidden="true">{{ strtoupper(substr($user->name, 0, 1)) }}</div>
@@ -187,9 +193,11 @@
 .profile-layout {
     display: grid;
     grid-template-columns: 340px 1fr;
+    grid-template-rows: auto auto auto 1fr;
     grid-template-areas:
-        "top theme"
+        "top top"
         "identity edit"
+        "theme edit"
         "session edit";
     gap: 18px 20px;
     align-items: start;
@@ -198,15 +206,28 @@
 .area-top h1 { margin: 4px 0; }
 .area-theme {
     grid-area: theme;
-    justify-self: end;
-    align-self: end;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: #ffffff;
+    border: 1px solid #e6e8ea;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
 }
-.theme-mobile-meta { display: none; }
-.profile-theme-btn { white-space: nowrap; }
+body.dark-mode .area-theme {
+    background: #131924;
+    border-color: #212c3d;
+}
+.theme-mobile-meta { display: block; }
+.pref-controls { display: flex; flex-direction: column; gap: 9px; width: 100%; }
+.profile-theme-btn,
+.profile-lang-btn { width: 100%; white-space: nowrap; }
+.pref-lang-icon { width: 17px; height: 17px; stroke-width: 1.9; flex-shrink: 0; }
 
 .area-identity { grid-area: identity; }
 .area-edit { grid-area: edit; }
-.area-session { grid-area: session; }
+.area-session { grid-area: session; align-self: start; }
 
 .edit-dropdown-trigger { display: none; }
 .edit-dropdown-body {
@@ -304,6 +325,7 @@ body.dark-mode .role-user { background: #0c261d; color: #34d399; border-color: #
 @media (max-width: 900px) {
     .profile-layout {
         grid-template-columns: 1fr;
+        grid-template-rows: auto;
         grid-template-areas:
             "top"
             "identity"
@@ -313,24 +335,17 @@ body.dark-mode .role-user { background: #0c261d; color: #34d399; border-color: #
         gap: 14px;
     }
     .area-theme {
-        justify-self: stretch;
-        align-self: stretch;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
-        flex-wrap: wrap;
-        background: #ffffff;
-        border: 1px solid #e6e8ea;
-        border-radius: 10px;
+        flex-direction: column;
+        align-items: stretch;
         padding: 16px;
-        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
     }
-    body.dark-mode .area-theme {
-        background: #131924;
-        border-color: #212c3d;
+    .pref-controls {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
     }
-    .theme-mobile-meta { display: block; }
+    .profile-theme-btn,
+    .profile-lang-btn { width: 100%; font-size: 12.5px; padding: 9px 10px; }
 
     .edit-dropdown-trigger {
         display: flex;
@@ -384,8 +399,7 @@ body.dark-mode .role-user { background: #0c261d; color: #34d399; border-color: #
 }
 
 @media (max-width: 520px) {
-    .area-theme { flex-direction: column; align-items: stretch; }
-    .profile-theme-btn { width: 100%; }
+    .pref-controls { grid-template-columns: 1fr; }
     .avatar-form { flex-direction: column; align-items: stretch; }
     .avatar-form .btn,
     .file-picker { width: 100%; min-width: 0; }

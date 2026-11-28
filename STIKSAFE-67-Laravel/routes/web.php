@@ -77,6 +77,7 @@ Route::middleware(['auth'])->group(function (): void {
     Route::middleware('admin')->prefix('admin')->name('admin.')->group(function (): void {
         Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
         Route::get('/scans', [AdminScanController::class, 'index'])->name('scans');
+        Route::delete('/scans/bulk-destroy', [AdminScanController::class, 'bulkDestroy'])->name('scans.bulk-destroy');
         Route::get('/scans/{id}', [AdminScanController::class, 'show'])->name('scans.show');
         Route::post('/scans/{id}/retry', [AdminScanController::class, 'retry'])->name('scans.retry');
         Route::get('/audit-logs', [AdminAuditLogController::class, 'index'])->name('audit-logs');

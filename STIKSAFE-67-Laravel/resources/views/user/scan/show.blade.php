@@ -12,11 +12,11 @@
         'unknown' => 'Indikasi netral',
         default => '—',
     };
-    $labelTone = match ($label) {
-        'safe' => ['color' => '#006948', 'bg' => '#ecfdf5', 'border' => '#a7f3d0'],
-        'malicious' => ['color' => '#ba1a1a', 'bg' => '#fef2f2', 'border' => '#fecaca'],
-        'suspicious' => ['color' => '#b45309', 'bg' => '#fffbeb', 'border' => '#fde68a'],
-        default => ['color' => '#565e74', 'bg' => '#f2f4f6', 'border' => '#e6e8ea'],
+    $labelToneClass = match ($label) {
+        'safe' => 'tone-safe',
+        'malicious' => 'tone-malicious',
+        'suspicious' => 'tone-suspicious',
+        default => 'tone-neutral',
     };
     $reasonLabels = [
         'DOUBLE_EXTENSION' => 'Ekstensi ganda terdeteksi — indikasi penyamaran file.',
@@ -83,11 +83,11 @@
             </div>
         </section>
     @elseif ($status === 'completed')
-        <section class="panel verdict-card" style="border-left:4px solid {{ $labelTone['color'] }}">
+        <section class="panel verdict-card {{ $labelToneClass }}">
             <span class="eyebrow">HASIL PEMERIKSAAN</span>
             <div style="margin:14px 0 8px">
-                <span class="verdict-badge" style="color:{{ $labelTone['color'] }};background:{{ $labelTone['bg'] }};border-color:{{ $labelTone['border'] }}">
-                    <span class="verdict-dot" style="background:{{ $labelTone['color'] }}"></span>
+                <span class="verdict-badge {{ $labelToneClass }}">
+                    <span class="verdict-dot"></span>
                     {{ $labelText }}
                 </span>
             </div>
@@ -227,13 +227,22 @@
 .progress-meta { display: flex; justify-content: space-between; max-width: 420px; margin: 0 auto; color: #565e74; font-size: 11.5px; }
 .centered-actions { justify-content: center; }
 
-.verdict-card { padding: 28px; }
+.verdict-card { padding: 28px; border-left: 4px solid #565e74; }
+.verdict-card.tone-safe { border-left-color: #006948; }
+.verdict-card.tone-malicious { border-left-color: #ba1a1a; }
+.verdict-card.tone-suspicious { border-left-color: #b45309; }
+.verdict-card.tone-neutral { border-left-color: #565e74; }
+
 .verdict-badge {
     display: inline-flex; align-items: center; gap: 8px;
-    padding: 8px 16px; border-radius: 999px; border: 1px solid;
+    padding: 8px 16px; border-radius: 999px; border: 1px solid #e6e8ea;
     font-family: 'Plus Jakarta Sans', sans-serif; font-size: 20px; font-weight: 700;
 }
-.verdict-dot { width: 9px; height: 9px; border-radius: 999px; }
+.verdict-dot { width: 9px; height: 9px; border-radius: 999px; background: currentColor; }
+.verdict-badge.tone-safe { color: #006948; background: #ecfdf5; border-color: #a7f3d0; }
+.verdict-badge.tone-malicious { color: #ba1a1a; background: #fef2f2; border-color: #fecaca; }
+.verdict-badge.tone-suspicious { color: #b45309; background: #fffbeb; border-color: #fde68a; }
+.verdict-badge.tone-neutral { color: #565e74; background: #f2f4f6; border-color: #e6e8ea; }
 .verdict-caption { color: #565e74; margin: 6px 0 22px; font-size: 14.5px; }
 
 .result-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 18px; }
@@ -247,7 +256,7 @@
 .reason-count { color: #565e74; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; }
 .reason-list { list-style: none; padding: 0; margin: 12px 0 0; display: grid; gap: 10px; }
 .reason-list li { display: flex; gap: 10px; align-items: flex-start; font-size: 13.5px; color: #191c1e; }
-.reason-mark { color: #a33900; font-size: 10px; margin-top: 4px; }
+.reason-mark { color: #f97316; font-size: 10px; margin-top: 4px; }
 .reason-list code { display: inline-block; margin-top: 3px; padding: 2px 6px; border-radius: 4px; background: #ffffff; border: 1px solid #e6e8ea; color: #565e74; font-size: 11px; }
 .disclaimer { font-size: 12px; color: #64748b; line-height: 1.6; margin: 18px 0 0; }
 
@@ -264,12 +273,49 @@
 }
 .result-actions { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-top: 22px; }
 
+/* Dark Mode for File Scan Result */
+body.dark-mode .file-icon { background: #2a1b12; color: #ff9a3d; border: 1px solid #5c3317; }
+body.dark-mode .file-info h2 { color: #f8fafc; }
+body.dark-mode .file-info p { color: #94a3b8; }
+body.dark-mode .status-queued, body.dark-mode .status-processing { color: #93c5fd; background: #10203a; border-color: #1e3a8a; }
+body.dark-mode .status-completed { color: #34d399; background: #0c261d; border-color: #164e3a; }
+body.dark-mode .status-failed, body.dark-mode .status-cancelled, body.dark-mode .status-rejected { color: #fca5a5; background: #2d1215; border-color: #5c2229; }
+body.dark-mode .loader-ring { border-color: #212c3d; border-top-color: #ff7b00; }
+body.dark-mode .progress-track { background: #1e293b; }
+body.dark-mode .progress-bar { background: #ff7b00; }
+body.dark-mode .progress-meta { color: #94a3b8; }
+
+body.dark-mode .verdict-card.tone-safe { border-left-color: #34d399; }
+body.dark-mode .verdict-card.tone-malicious { border-left-color: #f87171; }
+body.dark-mode .verdict-card.tone-suspicious { border-left-color: #fbbf24; }
+body.dark-mode .verdict-card.tone-neutral { border-left-color: #64748b; }
+body.dark-mode .verdict-badge.tone-safe { color: #34d399; background: #0c261d; border-color: #164e3a; }
+body.dark-mode .verdict-badge.tone-malicious { color: #fca5a5; background: #2d1215; border-color: #5c2229; }
+body.dark-mode .verdict-badge.tone-suspicious { color: #fbbf24; background: #2b2110; border-color: #5c4317; }
+body.dark-mode .verdict-badge.tone-neutral { color: #e2e8f0; background: #1e293b; border-color: #334155; }
+body.dark-mode .verdict-caption { color: #cbd5e1; }
+
+body.dark-mode .result-stat { background: #0e141f; border-color: #212c3d; }
+body.dark-mode .result-stat span { color: #94a3b8; }
+body.dark-mode .result-stat strong { color: #f8fafc; }
+body.dark-mode .result-stat small { color: #94a3b8; }
+
+body.dark-mode .reason-box { background: #0e141f; border-color: #212c3d; }
+body.dark-mode .reason-count { color: #94a3b8; }
+body.dark-mode .reason-list li { color: #e2e8f0; }
+body.dark-mode .reason-mark { color: #ff7b00; }
+body.dark-mode .reason-list code { background: #131924; border-color: #2a384e; color: #cbd5e1; }
+body.dark-mode .disclaimer { color: #94a3b8; }
+body.dark-mode .warning-icon, body.dark-mode .error-box { background: #2d1215; border-color: #5c2229; color: #fca5a5; }
+body.dark-mode .feedback-form select, body.dark-mode .feedback-form input { background: #0e141f; border-color: #2a384e; color: #f8fafc; }
+
 @keyframes spin { to { transform: rotate(360deg); } }
 @keyframes progress { 0% { transform: translateX(-120%); } 100% { transform: translateX(340%); } }
 @media (max-width: 640px) {
     .result-grid { grid-template-columns: 1fr; }
     .feedback-form { flex-direction: column; }
     .verdict-card { padding: 20px; }
+    .verdict-badge { font-size: 17px; padding: 7px 14px; }
 }
 </style>
 @endsection

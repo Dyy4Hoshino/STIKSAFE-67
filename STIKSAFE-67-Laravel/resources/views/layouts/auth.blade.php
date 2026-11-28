@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#131924">
-    <link rel="icon" type="image/jpeg" href="{{ asset('img/stiksafe-shield-logo.jpg') }}">
+    <link rel="icon" type="image/png" href="{{ asset('img/stiksafe-shield-logo.png') }}">
     <title>@yield('title', 'STIKSAFE-67')</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -66,9 +66,6 @@
             width: 36px;
             height: 36px;
             object-fit: contain;
-            background: #ffffff;
-            border-radius: 9px;
-            padding: 3px;
         }
         .auth-brand em { color: #ff7a33; font-style: normal; }
         .auth-brand-div { width: 1px; height: 22px; background: rgba(255, 255, 255, 0.16); }
@@ -362,7 +359,7 @@
             <div class="auth-aside-top">
                 <div class="auth-brand-row">
                     <a class="auth-brand" href="{{ route('home') }}">
-                        <img src="{{ asset('img/stiksafe-shield-logo.jpg') }}" alt="Logo STIKSAFE">
+                        <img src="{{ asset('img/stiksafe-shield-logo.png') }}" alt="Logo STIKSAFE">
                         <span>STIK<em>SAFE</em></span>
                     </a>
                     <span class="auth-brand-div" aria-hidden="true"></span>
@@ -432,5 +429,6 @@
             });
         });
     </script>
+    <script src="{{ asset('js/stiksafe-i18n.js') }}" defer></script>
 </body>
 </html>

@@ -92,4 +92,44 @@ class AdminScanController extends Controller
 
         return back()->with('success', 'Scan dimasukkan kembali ke antrean untuk dicoba ulang.');
     }
+
+    public function bulkDestroy(Request $request, AuditLogService $audit): RedirectResponse
+    {
+        $validated = $request->validate([
+            'scan_ids' => ['required', 'array', 'min:1'],
+            'scan_ids.*' => ['required', 'string'],
+        ], [
+            'scan_ids.required' => 'Pilih minimal satu log scan untuk dihapus.',
+            'scan_ids.min' => 'Pilih minimal satu log scan untuk dihapus.',
+        ]);
+
+        $scans = Scan::query()->whereIn('id', $validated['scan_ids'])->get();
+        if ($scans->isEmpty()) {
+            return back()->withErrors(['scan_ids' => 'Log scan yang dipilih tidak ditemukan.']);
+        }
+
+        $deletedIds = [];
+        DB::transaction(function () use ($scans, &$deletedIds): void {
+            foreach ($scans as $scan) {
+                if ($scan->stored_path && $scan->storage_disk) {
+                    try {
+                        Storage::disk($scan->storage_disk)->delete($scan->stored_path);
+                    } catch (\Throwable) {
+                    }
+                }
+                $scan->attempts()->delete();
+                $scan->feedback()->delete();
+                $deletedIds[] = $scan->id;
+                $scan->delete();
+            }
+        });
+
+        $count = count($deletedIds);
+        $audit->record('scan.bulk_deleted', 'scan', null, [
+            'count' => $count,
+            'scan_ids' => array_slice($deletedIds, 0, 50),
+        ], severity: 'warn');
+
+        return back()->with('success', "{$count} log scan berhasil dihapus.");
+    }
 }
